@@ -24,6 +24,9 @@ it exactly.** If this file and `CLAUDE.md` ever differ, `CLAUDE.md` wins.
   records, intake responses, contact details, credentials and photographs do not
   belong here.
 - Before committing, run `python3 scripts/check-docs.py`. It must print `OK`.
+- The Human Context protocols under `docs/04-protocols/` are **INACTIVE drafts**.
+  Never collect, request, infer or store Human Context information, and never
+  generate psychological interpretations of a practitioner (D-027, D-035).
 - Cite blueprint §9 open decisions as `BP-D1`…`BP-D6`, never bare `D-1`…`D-6`.
 - Do not install agent frameworks, add hooks, merge, deploy, or open pull
   requests unless the owner has asked for it in the current phase.
