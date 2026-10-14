@@ -37,8 +37,17 @@ Before committing, run `python3 scripts/check-docs.py`.
 ## Current state — honest summary
 
 - **Approved:** product direction, repository architecture, three-stage model
-  (structure), scope discipline, the compounding rule, claims discipline.
-- **Open:** pricing, required monthly revenue floor, outreach channel.
+  (structure), scope discipline, the compounding rule, claims discipline, the
+  public-repository data boundary, the numbered documentation structure, and the
+  rule that the defect taxonomy carries evidence labels and no frequency or
+  impact claims.
+- **Open:** pricing; required monthly revenue floor; outreach channel; where
+  private engagement records live; which existing intake is the base schema;
+  whether consent-before-extraction becomes binding doctrine; who drafts the DPA
+  and refund policy (both are first-sale blockers); the consent route for the
+  reference practitioner; and the scope of the privacy review of historical
+  repositories. See the [decision log](docs/01-decisions/DECISION-LOG.md) for
+  identifiers (D-007, D-008, D-017 to D-023).
 - **Evidence of demand:** none. Zero practitioners have paid. No measured
   before/after exists for any engagement.
 - **Built:** a handful of proven reusable components (see Provenance). No
