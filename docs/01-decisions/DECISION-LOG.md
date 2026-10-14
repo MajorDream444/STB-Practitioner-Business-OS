@@ -231,3 +231,163 @@ named ~€450 (R-001); **$500–$750 is Claude's delivery-economics
 recommendation in blueprint §1.1**, which the blueprint calls "adopted" but this
 log records as **OPEN (D-007)**. Where the blueprint and this log differ on
 status, this log governs. No price is approved.
+
+---
+
+## 2026-10-14 · Research Intelligence V1.2 — methodology approval
+
+Recorded from the owner's written approval of Research Intelligence V1.2 as the
+current research and methodology baseline. "Auth. ref" cites the owner's item
+number in that approval. **This approval does not authorise commercial launch,
+public claims of validated outcomes, or deployment of the optional Human Context
+module.** V1.2 itself is supporting evidence; where it differs from this log or
+the blueprint, this log governs.
+
+### D-024 · Three-reality model — **APPROVED** · Auth. ref 1
+Business Reality, Human Reality, Implementation Reality. (V1.2 calls these
+"layers"; see D-042 for the terminology collision with the intake layers.)
+
+### D-025 · Build While You Heal — **APPROVED** · Auth. ref 2
+Foundational methodology, internally and as an opt-in journey. **No therapeutic
+claims**: STB does not claim to heal, treat, regulate or resolve trauma or any
+psychological condition.
+
+### D-026 · Category D is unscored human context — **APPROVED** · Auth. ref 3
+Unscored, optional, practitioner-interpreted. It never changes a severity, a
+route, or a price, and observable signals alone never establish a human factor.
+
+### D-027 · Human Context conditions — **APPROVED** · Auth. ref 4
+Separate consent, restricted storage, human-led facilitation. AI agents may not
+generate psychological interpretations or independently facilitate sensitive
+conversations.
+
+### D-028 · Reflective frameworks — **APPROVED** · Auth. ref 5
+Human Design, Gene Keys and similar are optional, practitioner-requested
+reflective language. They are not diagnostic or predictive evidence and are never
+used to score, route, price, or explain a decision in HAMAL's own voice.
+
+### D-029 · Implementation adoption tracking — **APPROVED** · Auth. ref 6
+Per delivered item: built, activated, in use after 30 days. Non-adoption is a
+delivery-learning signal, not a practitioner failing. Data model:
+`docs/00-canonical/ADOPTION-DATA-MODEL.md` (PROPOSED). Clock start: D-043.
+
+### D-030 · Client-private vs reusable IP, extended — **APPROVED** · Auth. ref 7
+Reaffirms and extends D-010. Human Context data is a restricted sub-class of
+client-private records and never enters any repository, public or private,
+marketing system, outreach tool, or general-purpose agent memory.
+
+### D-031 · V1.2 as baseline — **APPROVED**
+Research Intelligence V1.2 is the current research and methodology baseline and
+is preserved as supporting evidence (form of preservation: D-039). It is not a
+decision source.
+
+### D-032 · Initial Human Context facilitator — **PROVISIONAL**
+The founder, after documented preparation (informed consent, supportive listening,
+boundaries, handling distress, confidentiality, referral procedures). Future
+facilitators complete the same preparation plus a supervised practice review.
+Preparation does not qualify anyone to provide therapy. Draft:
+`docs/04-protocols/human-context/FACILITATOR.md` (INACTIVE).
+
+### D-033 · Referral network — **PROVISIONAL**
+Verified qualified professionals in relevant jurisdictions (a Bali-based pathway
+and an online pathway authorised for the client's physical location). The
+directory structure and verification checklist exist; **the directory stays
+empty until entries are verified**, and procedures are required before
+activation. Draft: `docs/04-protocols/human-context/REFERRALS-AND-ESCALATION.md`
+(INACTIVE).
+
+### D-034 · Human Context retention — **PROVISIONAL, pending privacy and legal review**
+Proposed default: delete identifiable Human Context notes within 30 days after
+engagement completion, unless the practitioner asks for earlier deletion or
+separately agrees a defined extension. The practitioner can access, correct and
+request deletion. Administrative consent records may follow a different period.
+Deletion must account for backups, access logs and legal obligations. Detailed
+trauma narratives are not collected; only practical accommodations the
+practitioner approves are recorded. **This is an operating default, not a legal
+determination.** Draft: `docs/04-protocols/human-context/DELETION-AND-RETENTION.md`
+(INACTIVE).
+
+### D-035 · Human Context activation gate — **APPROVED**
+No Human Context storage, collection or deployment until D-032, D-033 and D-034
+are finalised, and D-038 is decided. All protocol documents are drafts marked
+INACTIVE; `scripts/check-docs.py` enforces the marker.
+
+### D-036 · Non-conversion is not automatically failure — **APPROVED in principle**
+Appropriate, ethical non-conversion (for example a correct finding that needs no
+paid implementation) must not be treated as a failed validation. Recommendation
+appropriateness is measured alongside conversion. Metrics and thresholds are
+OPEN (D-041).
+
+### D-037 · Next milestone — **APPROVED as direction**
+A working sample diagnostic using a fictional practitioner and invented data,
+clearly marked synthetic, producing the report HAMAL would deliver. It counts as
+zero evidence. Not started.
+
+---
+
+## Open items added by V1.2 reconciliation
+
+### D-038 · Rule 5 and the Human Context exception — **OPEN (blocks any activation)**
+CLAUDE.md rule 5 says "No health data." Self-reported experience of overwhelm,
+self-regulation and identity, and the birth details reflective frameworks need,
+are likely to be special-category data under GDPR Art. 9 even when framed as
+non-clinical (not a legal determination). Proposal for the owner: reword rule 5 as
+"No health data in the core service. Human Context is the sole consent-gated
+exception, inactive until D-035 is lifted." CLAUDE.md is **not** edited until the
+owner approves.
+
+### D-039 · Form of V1.2 preservation — **OPEN**
+V1.2 names individual practitioners and workspace identifiers, which conflicts
+with D-010 if stored verbatim in this public repository. Proposal: a redacted copy
+plus a manifest (hash and redaction list) here; the original stays in private
+storage (see D-017). V1.0, V1.1 and Draft A were not provided and are unverified.
+
+### D-040 · Taxonomy reconciliation — **OPEN**
+(a) V1.2 lists 18 business defects (A:5, B:5, C:4, E:4) but states 16; which are
+in scope? (b) V1.2 scores severity 3 = most severe; taxonomy v0.0 uses S1 = most
+severe. One direction must be chosen before a v0.1 merge.
+
+### D-041 · Validation-gate thresholds — **OPEN**
+Blueprint §8 (stop above 12 average hours; fewer than 3 paid by day 21) and V1.2
+(reprice above 8 hours; pause at 0 of 20 intakes) differ, and neither is approved.
+D-036 sets the principle; thresholds are the owner's.
+
+### D-042 · Human Context timing and terminology — **OPEN**
+V1.2 reads Human Context on Day 1 of the paid diagnostic; blueprint §6.1 collects
+its Layer C material only once Stage 2 is agreed. "Layer" also now means two
+things (intake layers A–C vs the three realities). Until decided, new documents
+say "intake tier" for A–C and "reality" for the V1.2 model.
+
+### D-043 · Adoption clock start — **OPEN**
+Whether "in use after 30 days" counts from activation or from handover.
+
+### D-044 · The "AMA" tier and `ama_custom` route — **OPEN**
+V1.2 uses an "AMA" tier and an `ama_custom` resolution route. Neither is defined
+in the blueprint or this log. Until defined, `ama_custom` is treated as an
+undefined placeholder and no document may present it as a product.
+
+V1.2's five commercial "proposed decisions" (first ICP, diagnostic-led model,
+three-client pilot, taxonomy as HAMAL IP, BPA/Sprint/AMA tiers) were **not part of
+the owner's approval** and are not recorded as decisions. D-003, D-007 and D-015
+continue to govern.
+
+---
+
+## Corrections to the record (continued)
+
+### C-005 · Internal inconsistency in V1.2
+V1.2 states "16 business defects" in several places; its tables list 18. Recorded
+under D-040. V1.2's economics (margins, break-even, Month 1) were re-derived and
+are arithmetically consistent; they remain unmeasured hypotheses, and V1.2's
+$350 overhead is not the revenue floor required by D-008.
+
+### C-006 · Wording of the hardcoded-address observation
+The observation "booking submissions bypass the intended intake destination" is
+imprecise. Source check of the reference build at `72a167e`: a hardcoded
+mail-client address was used in two components (introduced in `3d6e922`,
+2026-06-03; removed in `220d831`). The **reachable** instance was a guide-request
+form mounted in the application root; the **booking-request** instance sat in a
+component never mounted. The build was never publicly deployed. Supportable
+wording: "enquiry submissions bypassed the intended intake destination in a build
+never publicly deployed." Re-verified from source by a second session of the same
+tool, not by an independent human reviewer.
