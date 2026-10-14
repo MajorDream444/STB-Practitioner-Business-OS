@@ -26,12 +26,30 @@ eventually become one.
 | [Decision Log](docs/01-decisions/DECISION-LOG.md) | What is **approved** vs merely **recommended** vs **open**. Read before acting on any proposal |
 | [Provenance & Reuse Constraints](docs/03-provenance/PROVENANCE.md) | What exists, where it came from, what may legally be reused |
 | [Council evidence](docs/02-evidence/council-20261014/) | The LLM Council that informed the model — open the `.html` |
+| [Architecture — data boundaries](docs/00-canonical/ARCHITECTURE.md) | What may and may not live in this public repository, and how material moves from private to reusable |
+| [Defect taxonomy v0.0](taxonomy/README.md) | The reusable defect catalogue, with evidence labels and sample sizes. No frequency or impact is claimed |
+| [Intake reconciliation](docs/02-evidence/intake-reconciliation-20261014/RECONCILIATION.md) | What the existing intake structures contain and where they diverge |
+| [Engagement storage proposal](docs/01-decisions/PROPOSAL-engagement-storage.md) | **Proposed, not approved** — where private records would live |
+| [Adoption data model](docs/00-canonical/ADOPTION-DATA-MODEL.md) | **Proposed schema** for tracking whether delivered items are built, activated and in use after 30 days |
+| [Human Context protocols](docs/04-protocols/human-context/README.md) | **DRAFT — INACTIVE.** Consent, access, deletion, facilitator and referral protocols for the optional module. Nothing here authorises collecting data |
+| [AGENTS.md](AGENTS.md) | Entry point for non-Claude agents; defers to `CLAUDE.md` |
+
+Before committing, run `python3 scripts/check-docs.py`.
 
 ## Current state — honest summary
 
 - **Approved:** product direction, repository architecture, three-stage model
-  (structure), scope discipline, the compounding rule, claims discipline.
-- **Open:** pricing, required monthly revenue floor, outreach channel.
+  (structure), scope discipline, the compounding rule, claims discipline, the
+  public-repository data boundary, the numbered documentation structure, and the
+  rule that the defect taxonomy carries evidence labels and no frequency or
+  impact claims.
+- **Open:** pricing; required monthly revenue floor; outreach channel; where
+  private engagement records live; which existing intake is the base schema;
+  whether consent-before-extraction becomes binding doctrine; who drafts the DPA
+  and refund policy (both are first-sale blockers); the consent route for the
+  reference practitioner; and the scope of the privacy review of historical
+  repositories. See the [decision log](docs/01-decisions/DECISION-LOG.md) for
+  identifiers (D-007, D-008, D-017 to D-023).
 - **Evidence of demand:** none. Zero practitioners have paid. No measured
   before/after exists for any engagement.
 - **Built:** a handful of proven reusable components (see Provenance). No
