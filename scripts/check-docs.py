@@ -9,7 +9,9 @@ Checks tracked files only. Exits non-zero on any failure. Not a git hook.
 1. Relative markdown links resolve to a tracked file or directory (the git
    index, not merely the working tree, so a clean checkout cannot break).
 2. Decision-log headings (D-###, R-###, C-###) are unique.
-3. Public-repo boundary (decision D-010): no email addresses, Google Forms or
+3. Every markdown file under docs/04-protocols/ carries an INACTIVE marker in
+   its first lines (decision D-035: Human Context drafts must not read as live).
+4. Public-repo boundary (decision D-010): no email addresses, Google Forms or
    Sheets links, phone numbers, or image files are tracked. This file alone is
    exempt from the content scans in (3), because its self-test holds fake
    phone-number fixtures; it is still checked for tracked images and links.
@@ -33,6 +35,7 @@ GOOGLE = re.compile(r"docs\.google\.com/(forms|spreadsheets)|forms\.gle/")
 PHONE_CAND = re.compile(r"(?<![\w.,:/$-])(?:\+|00|0)\d[\d ().\-]{7,18}\d")
 IMAGE_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".heic", ".bmp", ".tiff"}
 SELF = Path("scripts/check-docs.py")
+PROTOCOLS = "docs/04-protocols/"
 LOG = Path("docs/01-decisions/DECISION-LOG.md")
 LOG_HEADING = re.compile(r"^###\s+([DRC]-\d{3})\b")
 
@@ -109,6 +112,10 @@ def main():
                 dest = os.path.normpath((path.parent / rel).as_posix())
                 if dest.startswith("..") or (dest not in tracked and dest not in tracked_dirs):
                     failures.append(f"{path}: broken or untracked link -> {target}")
+
+        if path.as_posix().startswith(PROTOCOLS) and path.suffix == ".md":
+            if "INACTIVE" not in "\n".join(text.splitlines()[:12]):
+                failures.append(f"{path}: protocol draft lacks an INACTIVE marker (D-035)")
 
         if path == SELF:
             continue
