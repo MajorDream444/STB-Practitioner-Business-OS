@@ -26,6 +26,13 @@ eventually become one.
 | [Decision Log](docs/01-decisions/DECISION-LOG.md) | What is **approved** vs merely **recommended** vs **open**. Read before acting on any proposal |
 | [Provenance & Reuse Constraints](docs/03-provenance/PROVENANCE.md) | What exists, where it came from, what may legally be reused |
 | [Council evidence](docs/02-evidence/council-20261014/) | The LLM Council that informed the model — open the `.html` |
+| [Architecture — data boundaries](docs/00-canonical/ARCHITECTURE.md) | What may and may not live in this public repository, and how material moves from private to reusable |
+| [Defect taxonomy v0.0](taxonomy/README.md) | The reusable defect catalogue, with evidence labels and sample sizes. No frequency or impact is claimed |
+| [Intake reconciliation](docs/02-evidence/intake-reconciliation-20261014/RECONCILIATION.md) | What the existing intake structures contain and where they diverge |
+| [Engagement storage proposal](docs/01-decisions/PROPOSAL-engagement-storage.md) | **Proposed, not approved** — where private records would live |
+| [AGENTS.md](AGENTS.md) | Entry point for non-Claude agents; defers to `CLAUDE.md` |
+
+Before committing, run `python3 scripts/check-docs.py`.
 
 ## Current state — honest summary
 
