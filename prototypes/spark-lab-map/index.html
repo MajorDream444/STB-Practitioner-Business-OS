@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPARK LAB Architecture</title>
+<meta name="description" content="Concept demonstration: the SPARK LAB practitioner experience and the proposed HAMAL engine behind it. Illustrative only.">
+<style>
+:root{
+  --cream:#F6F1E7; --cream-2:#EFE7D8; --paper:#FFFDF8;
+  --ink:#1C1F1E; --ink-2:#4A4F4C; --ink-3:#7A7F7B;
+  --emerald:#0F5C4A; --emerald-2:#1F7A63; --emerald-soft:#DCEDE5;
+  --gold:#C9A45C; --gold-2:#E2C88E; --gold-soft:#F4EAD3;
+  --char:#14181A; --char-2:#1D2326; --char-3:#2A3236;
+  --coral:#C96F5A; --coral-soft:#F6E1DA;
+  --line:rgba(28,31,30,.12);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--cream);color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sr{position:absolute;left:-9999px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:30;background:rgba(246,241,231,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.mark{display:flex;align-items:center;gap:8px;font-weight:600;letter-spacing:.14em;font-size:13px}
+.mark svg{width:22px;height:22px}
+.demo-pill{font-size:12px;background:var(--gold-soft);color:#6B4F17;border:1px solid var(--gold-2);border-radius:999px;padding:3px 10px}
+.spacer{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:2px}
+.seg button{border:0;background:transparent;padding:5px 11px;border-radius:8px;font-size:13px;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.seg.scope button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.lbl{font-size:12px;color:var(--ink-3);margin-right:4px}
+.tog{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:5px 10px}
+.tog[aria-pressed="true"]{border-color:var(--emerald);color:var(--emerald)}
+
+/* scene */
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 0}
+.mode-q{font-family:var(--serif);font-size:19px;color:var(--ink-2);margin:4px 0 14px}
+.scene{position:relative;display:grid;grid-template-columns:minmax(0,1fr);perspective:1400px;border-radius:24px;overflow:hidden;min-height:640px;isolation:isolate}
+.layer{position:relative;grid-area:1/1;transition:transform 1.25s var(--ease),opacity 1s var(--ease),filter 1s var(--ease)}
+.scene::before{content:"";grid-area:1/1;background:radial-gradient(120% 90% at 20% 0%,#FBF7EE 0%,var(--cream-2) 60%,#E7DCC8 100%);z-index:-2}
+
+/* dashboard */
+#dash{z-index:2;padding:34px;display:flex;align-items:center;justify-content:center;transform-origin:62% 70%}
+.fronds{position:absolute;inset:0;pointer-events:none;z-index:-1;opacity:.55}
+.glass{width:100%;max-width:880px;background:rgba(255,253,248,.72);border:1px solid rgba(255,255,255,.9);border-radius:22px;padding:28px 28px 22px;box-shadow:0 30px 60px -30px rgba(15,92,74,.35),0 2px 0 rgba(255,255,255,.8) inset;backdrop-filter:blur(14px)}
+.d-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.d-brand{font-size:12px;letter-spacing:.18em;color:var(--emerald);font-weight:600}
+.d-hello{font-family:var(--serif);font-size:34px;line-height:1.15;margin:6px 0 2px;font-weight:500}
+.d-sub{color:var(--ink-2);margin:0}
+.school-strip{display:none;font-size:12.5px;color:var(--emerald);background:var(--emerald-soft);border-radius:10px;padding:6px 10px;max-width:260px}
+body[data-mode="school"] .school-strip{display:block}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0 16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;transition:transform .7s var(--ease),opacity .7s var(--ease),box-shadow .5s}
+.card h3{margin:0;font-size:15px;font-weight:600}
+.card p{margin:2px 0 10px;font-size:13px;color:var(--ink-3)}
+.card .row{font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:8px}
+.card .ico{width:26px;height:26px;border-radius:8px;background:var(--emerald-soft);display:grid;place-items:center;margin-bottom:8px}
+.card .ico svg{width:15px;height:15px;stroke:var(--emerald)}
+.companion{display:flex;gap:14px;align-items:center;background:linear-gradient(0deg,var(--gold-soft),#FBF5E7);border:1px solid var(--gold-2);border-radius:18px;padding:16px 18px;position:relative;transition:transform .9s var(--ease),box-shadow .6s}
+.orb{width:42px;height:42px;flex:none;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff,var(--gold-2) 45%,var(--gold) 100%);box-shadow:0 0 0 6px rgba(201,164,92,.15)}
+.companion .t{flex:1}
+.companion small{color:#7B6022;font-size:12px;letter-spacing:.04em}
+.companion p{margin:2px 0 0;font-size:15.5px}
+.btn{border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;font-size:14px}
+.btn.primary{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.btn.gold{background:var(--ink);border-color:var(--ink);color:var(--gold-2)}
+.illus{font-size:12px;color:var(--ink-3);margin:12px 0 0;text-align:center}
+.cta-row{display:flex;gap:8px;flex-wrap:wrap}
+
+/* engine */
+#engine{z-index:1;background:var(--char);color:#E9E4D8;padding:22px 22px 18px;opacity:0;transform:scale(.86) translateY(30px);filter:blur(6px);pointer-events:none;display:flex;flex-direction:column;gap:12px}
+#engine::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 50% at 50% 35%,rgba(201,164,92,.10),transparent 70%),
+  linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px) 0 0/40px 40px,
+  linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px) 0 0/40px 40px;pointer-events:none}
+.e-head{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.e-title{font-family:var(--serif);font-size:22px;color:#F4EFE3}
+.e-title b{color:var(--gold-2);font-weight:500}
+.e-cap{position:relative;font-family:var(--serif);font-size:17px;color:var(--gold-2);min-height:26px;margin:0;transition:opacity .6s}
+.ebtn{border:1px solid rgba(226,200,142,.35);background:rgba(255,255,255,.04);color:#EDE6D6;border-radius:9px;padding:6px 11px;font-size:13px}
+.ebtn[aria-pressed="true"]{background:var(--gold);color:var(--char);border-color:var(--gold)}
+.pills{display:flex;flex-wrap:wrap;gap:6px;position:relative}
+.pill{border:1px solid rgba(226,200,142,.25);background:transparent;color:#BDB6A6;border-radius:999px;padding:4px 10px;font-size:12.5px}
+.pill[aria-current="true"]{background:rgba(201,164,92,.18);color:#F4E6C4;border-color:var(--gold)}
+.e-body{position:relative;display:flex;flex-direction:column;gap:12px}
+.svgwrap{overflow-x:auto;min-width:0}
+.layer,.e-body{min-width:0}
+.panel-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:6px 24px}
+.e-svg{width:100%;height:auto;display:block}
+.panel{background:rgba(255,255,255,.04);border:1px solid rgba(226,200,142,.22);border-radius:16px;padding:14px 16px;font-size:13.5px}
+.panel h4{margin:0 0 4px;font-family:var(--serif);font-weight:500;font-size:19px;color:#F4EFE3}
+.panel dl{margin:8px 0 0}
+.panel dt{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#958E7F;margin-top:9px}
+.panel dd{margin:1px 0 0;color:#E2DCCE}
+.today-note{position:relative;display:none;font-size:13px;color:#F1D9A6;background:rgba(201,164,92,.12);border:1px dashed var(--gold);border-radius:12px;padding:8px 12px}
+body[data-scope="today"] .today-note{display:block}
+
+/* svg nodes */
+.n rect{fill:#1E2427;stroke:rgba(226,200,142,.35);stroke-width:1;transition:fill .5s,stroke .5s}
+.n text{fill:#CFC8B8;font:500 13.5px var(--sans);transition:fill .5s}
+.n .sub{fill:#8E8879;font:400 11.5px var(--sans)}
+.n .badge{font:500 9.5px var(--sans);letter-spacing:.06em;fill:#958E7F}
+.n.on rect{fill:#3A3426;stroke:var(--gold)}
+.n.on text{fill:#FFF6DF}
+.n.done rect{stroke:rgba(226,200,142,.6)}
+.n.gate rect{stroke-dasharray:none}
+.n.gate.on rect{fill:#1C4A3E;stroke:#7FD1B3}
+.n{cursor:pointer}
+.edge{fill:none;stroke:rgba(226,200,142,.28);stroke-width:1.4}
+.edge.draft{stroke-dasharray:5 5}
+.edge.lit{stroke:var(--gold)}
+.thread{fill:none;stroke:var(--gold);stroke-width:1.6;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
+.reveal .thread{animation:draw 1.6s var(--ease) forwards}
+@keyframes draw{0%{stroke-dashoffset:1;opacity:.9}100%{stroke-dashoffset:0;opacity:.9}}
+.handoff rect{fill:var(--char-2);stroke:rgba(226,200,142,.45)}
+.handoff text{fill:var(--gold-2);font:500 11px var(--sans)}
+.handoff{opacity:0;transition:opacity .5s}
+.handoff.show{opacity:1}
+.zone rect{fill:rgba(255,255,255,.025);stroke:rgba(255,255,255,.14)}
+.zone.local rect{stroke-dasharray:4 4}
+.zone text{fill:#A9A292;font:500 11.5px var(--sans)}
+.zone .s{font-weight:400;fill:#7E786B;font-size:10.5px}
+.orch rect{fill:rgba(201,164,92,.07);stroke:rgba(226,200,142,.3)}
+.orch text{fill:#D9C796;font:500 12px var(--sans)}
+.lower{transition:opacity .6s}
+body:not([data-expanded="true"]) .lower{opacity:0;pointer-events:none}
+.eng-only{display:none}
+body[data-mode="eng"] .eng-only{display:revert}
+body[data-mode="eng"] svg .eng-only{display:inline}
+.dim-today{transition:opacity .5s}
+body[data-scope="today"] .sec.is-proposed,body[data-scope="today"] .box.is-notbuilt,body[data-scope="today"] .hc.is-inactive,body[data-scope="today"] .lower{opacity:.28}
+body[data-scope="today"] .n.is-proposed rect,body[data-scope="today"] .n.is-notbuilt rect{stroke:rgba(255,255,255,.18);stroke-dasharray:3 4}
+body[data-scope="today"] .n.is-proposed text,body[data-scope="today"] .n.is-notbuilt text{opacity:.38}
+body[data-scope="today"] svg .badge{display:inline;opacity:1!important;fill:#E2C88E}
+.pulse{fill:#FFE7A8;filter:drop-shadow(0 0 6px rgba(255,214,130,.9))}
+
+/* scene states */
+body[data-view="engine"] #dash{transform:scale(2.35) translateZ(0);opacity:0;filter:blur(10px);pointer-events:none;transition:transform 1.3s cubic-bezier(.55,0,.3,1),opacity 1.15s cubic-bezier(.6,0,.8,.3),filter 1.15s cubic-bezier(.6,0,.8,.3)}
+body[data-view="engine"] #engine{opacity:1;transform:none;filter:none;pointer-events:auto;transition-delay:.45s}
+body.lifting .card{transform:translateY(-14px);opacity:.35}
+body.lifting .companion{transform:scale(1.04);box-shadow:0 0 0 2px var(--gold),0 20px 50px -10px rgba(201,164,92,.6)}
+
+/* sections */
+.sections{max-width:1180px;margin:0 auto;padding:28px 16px 40px;display:flex;flex-direction:column;gap:18px}
+.sec{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px}
+.sec h2{font-family:var(--serif);font-weight:500;font-size:24px;margin:0 0 2px}
+.sec .lead{color:var(--ink-2);margin:0 0 14px;max-width:760px}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:flex-start}
+body[data-mode="school"] #sec-school{order:-1}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.grp h3{font-size:13px;margin:0 0 8px;color:var(--ink-2);font-weight:600}
+.tiles{display:flex;flex-direction:column;gap:6px}
+.tile{border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:13px;background:#fff;transition:background .4s,border-color .4s,transform .4s}
+.tile .id{font:600 11px var(--sans);color:var(--ink-3);margin-right:6px}
+.tile .sev{float:right;font-size:11px;color:var(--ink-3)}
+.tile.scan{background:var(--emerald-soft);border-color:var(--emerald-2)}
+.tile.top{background:var(--gold-soft);border-color:var(--gold);transform:translateX(4px)}
+.hc{margin-top:14px;border:1px dashed #B9B3A6;border-radius:14px;padding:12px;background:repeating-linear-gradient(135deg,#FAF8F3 0 10px,#F4F1EA 10px 20px)}
+.hc .tiles{flex-direction:row;flex-wrap:wrap}
+.hc .tile{background:rgba(255,255,255,.7);color:var(--ink-3);border-style:dashed}
+.result{margin-top:12px;font-size:14px;min-height:22px;color:var(--ink-2)}
+.outcomes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.oc{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.oc h3{margin:0 0 4px;font-size:15px}
+.oc p{margin:0;font-size:13.5px;color:var(--ink-2)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.box h3{margin:0 0 8px;font-size:15px}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+.chip{border-radius:10px;padding:8px 10px;border:1px solid var(--line);background:var(--cream)}
+.chip.private{background:var(--coral-soft);border-color:#E3B3A6;color:#7A3B2C}
+.chip.shared{background:var(--emerald-soft);border-color:#A9D2C2;color:var(--emerald)}
+.wall{width:3px;align-self:stretch;min-height:40px;background:repeating-linear-gradient(180deg,var(--coral) 0 6px,transparent 6px 10px);position:relative}
+.arrow{color:var(--ink-3)}
+.glow{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.oneway{position:relative;height:14px;flex:1;min-width:60px}
+.oneway::before{content:"";position:absolute;left:0;right:0;top:6px;height:1px;background:var(--gold-2)}
+.oneway .glow{position:absolute;top:2px;left:0;animation:slide 2.6s linear infinite}
+@keyframes slide{from{left:0}to{left:calc(100% - 10px)}}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
+.lane{border-radius:10px;padding:10px;border:1px solid var(--line);background:var(--cream)}
+.lane.local{border-style:dashed}
+.rings{display:flex;gap:26px;flex-wrap:wrap;align-items:center}
+.ring{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px}
+.ring svg{width:76px;height:76px}
+.ring circle.bg{fill:none;stroke:var(--cream-2);stroke-width:7}
+.ring circle.fg{fill:none;stroke:var(--emerald-2);stroke-width:7;stroke-linecap:round;stroke-dasharray:201;stroke-dashoffset:201;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 1.2s var(--ease)}
+.ring.muted circle.fg{stroke:#B9B3A6}
+.rings.run .ring:nth-child(1) circle.fg{stroke-dashoffset:0}
+.rings.run .ring:nth-child(2) circle.fg{stroke-dashoffset:0;transition-delay:.8s}
+.rings.run .ring:nth-child(3) circle.fg{stroke-dashoffset:0;transition-delay:1.6s}
+.rings.run .ring:nth-child(5) circle.fg{stroke-dashoffset:120;transition-delay:2.4s}
+.schoolviz{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.school{border:1px solid var(--emerald-2);background:var(--emerald-soft);color:var(--emerald);border-radius:14px;padding:14px 16px;font-weight:600}
+.wss{display:grid;grid-template-columns:repeat(3,minmax(0,120px));gap:8px}
+.ws{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px;font-size:12px;color:var(--ink-2)}
+.ws b{display:block;color:var(--ink);font-size:12.5px}
+.legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.lg{border-radius:12px;padding:10px 12px;font-size:13px;border:1px solid var(--line);background:#fff}
+.lg b{display:block;font-size:13.5px;margin-bottom:2px}
+.today-list{margin:14px 0 0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.today-list li{margin:3px 0}
+
+/* status badges */
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;letter-spacing:.02em;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.st.today{background:#DDF0E3;color:#1F6B3A}
+.st.approved{background:var(--emerald-soft);color:var(--emerald)}
+.st.proposed{background:var(--gold-soft);color:#7B5A1A}
+.st.inactive{background:#ECEAE5;color:#6B6860}
+.st.notbuilt{background:#E7E3DC;color:#3D3B37;background-image:repeating-linear-gradient(135deg,transparent 0 5px,rgba(0,0,0,.05) 5px 10px)}
+.panel .st{margin-top:2px}
+.foot{max-width:1180px;margin:0 auto;padding:0 16px 40px;text-align:center}
+.foot .p{font-family:var(--serif);font-size:21px;margin:0 0 6px}
+.foot small{color:var(--ink-3)}
+
+@media (max-width:900px){
+  .cards,.grid4,.outcomes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .svgwrap .e-svg{min-width:860px}
+  .panel-grid{grid-template-columns:1fr}
+  .two,.lanes{grid-template-columns:1fr}
+  .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .d-hello{font-size:28px}
+  .scene{min-height:0}
+}
+/* reduced motion */
+body.rm *,body.rm *::before,body.rm *::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-delay:0s!important}
+body.rm[data-view="engine"] #dash{transform:none}
+</style>
+</head>
+<body data-mode="practitioner" data-view="dash" data-scope="vision" data-expanded="false">
+<h1 class="sr">SPARK LAB concept demonstration: the practitioner dashboard and the proposed HAMAL engine behind it</h1>
+
+<header class="bar">
+  <div class="bar-in">
+    <div class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="#0F5C4A" stroke-width="1.5"/><path d="M12 5 L13.6 10.4 L19 12 L13.6 13.6 L12 19 L10.4 13.6 L5 12 L10.4 10.4 Z" fill="#C9A45C"/></svg>SPARK LAB</div>
+    <span class="demo-pill">Concept demonstration · illustrative only · not a live platform</span>
+    <span class="spacer"></span>
+    <div><span class="lbl">View as</span><div class="seg" role="group" aria-label="Viewing mode">
+      <button data-mode="practitioner" aria-pressed="true">Practitioner</button>
+      <button data-mode="school" aria-pressed="false">School partner</button>
+      <button data-mode="eng" aria-pressed="false">Engineering</button>
+    </div></div>
+    <div><span class="lbl">Show</span><div class="seg scope" role="group" aria-label="Capability scope">
+      <button data-scope="vision" aria-pressed="true">Full vision</button>
+      <button data-scope="today" aria-pressed="false">What exists today</button>
+    </div></div>
+    <button class="tog" id="rmBtn" aria-pressed="false">Reduced motion</button>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <p class="mode-q" id="modeQ">What can SPARK LAB do for my business?</p>
+
+  <section class="scene" id="scene" aria-label="Practitioner dashboard and engine">
+    <svg class="fronds" viewBox="0 0 1180 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke="#1F7A63" stroke-width="1.2" opacity=".35">
+        <path d="M-20 120 C 120 90, 200 30, 260 -20"/><path d="M0 150 C 90 140,150 110,210 60"/><path d="M10 200 C 110 190,180 160,240 110"/>
+        <path d="M1200 520 C 1060 520, 980 580, 940 660"/><path d="M1200 470 C 1080 470,1010 520,960 600"/><path d="M1200 420 C 1100 430,1040 470,990 540"/>
+      </g>
+    </svg>
+
+    <!-- DASHBOARD -->
+    <div class="layer" id="dash">
+      <div class="glass">
+        <div class="d-top">
+          <div>
+            <div class="d-brand">SPARK LAB</div>
+            <div class="d-hello">Good morning, Maya</div>
+            <p class="d-sub">Your practice, all in one place.</p>
+          </div>
+          <div class="school-strip">Offered through an example training school's graduate program. Your workspace stays yours.</div>
+        </div>
+        <div class="cards">
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div><h3>Bookings</h3><p>Your upcoming sessions</p><div class="row">Sample session · awaiting confirmation</div></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="9" cy="9" r="3.5"/><path d="M3 20c.8-3.5 3.2-5 6-5s5.2 1.5 6 5M16 6.5a3 3 0 0 1 0 6M18 15c1.6.6 2.6 2.2 3 5"/></svg></div><h3>Clients</h3><p>Your relationships</p><div class="row">Sample enquiry · reply drafted</div></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3l2.4 5.4L20 9l-4.2 3.8L17 19l-5-3-5 3 1.2-6.2L4 9l5.6-.6z"/></svg></div><h3>Offers</h3><p>What you share</p><div class="row">Private sessions · draft</div></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 12l4 4 10-10"/></svg></div><h3>Tasks</h3><p>What needs attention</p><div class="row">Review your booking page</div></div>
+        </div>
+        <div class="companion" id="companion">
+          <div class="orb" aria-hidden="true"></div>
+          <div class="t"><small>Your business companion</small><p>Your booking page is ready for review. Would you like to see it?</p></div>
+          <div class="cta-row">
+            <button class="btn" id="reviewBtn">Review page</button>
+            <button class="btn gold" id="howBtn">See how it was prepared</button>
+          </div>
+        </div>
+        <p class="illus">Illustrative interface — not a live client account. "Maya" is a fictional practitioner.</p>
+      </div>
+    </div>
+
+    <!-- ENGINE -->
+    <div class="layer" id="engine" aria-hidden="true">
+      <div class="e-head">
+        <div class="e-title">Behind your dashboard: <b>HAMAL</b></div>
+        <span class="st proposed" title="The automated agent engine is a proposed future platform">Proposed future platform</span>
+        <span class="spacer"></span>
+        <button class="ebtn" id="playBtn" aria-pressed="false">Play</button>
+        <button class="ebtn" id="prevBtn" aria-label="Previous stage">Back</button>
+        <button class="ebtn" id="nextBtn" aria-label="Next stage">Next</button>
+        <button class="ebtn" id="expBtn" aria-pressed="false">Expand engine</button>
+        <button class="ebtn" id="backBtn">Return to dashboard</button>
+      </div>
+      <p class="e-cap" id="cap" aria-live="polite"></p>
+      <div class="today-note">Today: these steps are carried out by the HAMAL team by hand, supported by a few authored assistant skills. The automated agent engine shown here is proposed and not built. The approval and verification rules already apply to that hand-delivered work.</div>
+      <div class="pills" id="pills" role="tablist" aria-label="Task stages"></div>
+      <div class="e-body">
+        <div class="svgwrap"><svg class="e-svg" id="esvg" viewBox="0 0 1110 430" role="img" aria-labelledby="esvgT">
+          <title id="esvgT">One example task travelling through the proposed HAMAL agent engine, with a practitioner approval gate before anything goes live</title>
+          <!-- edges -->
+          <path id="seg0" class="edge draft" d="M138 150 L170 150"/>
+          <path id="seg1a" class="edge draft" d="M298 140 C 318 120,312 95,330 95"/>
+          <path id="seg1b" class="edge draft" d="M298 160 C 318 180,312 205,330 205"/>
+          <path id="seg2a" class="edge draft" d="M458 95 C 476 95,472 140,490 140"/>
+          <path id="seg2b" class="edge draft" d="M458 205 C 476 205,472 160,490 160"/>
+          <path id="seg3" class="edge" d="M618 150 L650 150"/>
+          <path id="seg4" class="edge" d="M778 150 L810 150"/>
+          <path id="seg5" class="edge" d="M938 150 L970 150"/>
+          <!-- reveal threads (draw right to left on entry) -->
+          <g id="threads" aria-hidden="true">
+            <path class="thread" pathLength="1" d="M1034 150 L874 150 L714 150 L554 150 C 470 150,470 95,394 95 C 330 95,300 150,234 150 L74 150"/>
+            <path class="thread" pathLength="1" d="M554 150 C 470 150,470 205,394 205 C 330 205,300 150,234 150"/>
+          </g>
+          <g id="nodes"></g>
+          <g id="handoffs"></g>
+          <circle id="pulseA" class="pulse" r="5" cx="74" cy="150" opacity="0"/>
+          <circle id="pulseB" class="pulse" r="5" cx="74" cy="150" opacity="0"/>
+          <!-- lower layers -->
+          <g class="lower">
+            <g class="orch is-proposed dim-today">
+              <rect x="20" y="268" width="1070" height="34" rx="10"/>
+              <text x="40" y="290">Orchestrator — coordinates tasks, permissions, approvals and handoffs</text>
+              <text class="eng-only" x="760" y="290" style="fill:#8E8879;font-size:11px">task scope · permission check · action log</text>
+            </g>
+            <g stroke="rgba(226,200,142,.18)" stroke-dasharray="2 4">
+              <path d="M74 186V268M234 186V268M394 237V268M554 186V268M714 186V268M874 186V268M1034 186V268"/>
+              <path d="M714 302V330M900 302V330"/>
+            </g>
+            <g class="zone is-notbuilt dim-today">
+              <rect x="20" y="330" width="650" height="84" rx="12"/>
+              <text x="38" y="354">Cloud integrations — the practitioner's own booking, payment and CRM accounts</text>
+              <text class="s" x="38" y="373">Connected only with permission · scoped access · every action logged</text>
+              <g transform="translate(38 384)"><rect width="300" height="22" rx="6" fill="rgba(201,111,90,.18)" stroke="rgba(201,111,90,.6)"/><path d="M10 9v-2a3 3 0 0 1 6 0v2M8.5 9h9v8h-9z" fill="none" stroke="#E7A796" stroke-width="1.2"/><text x="26" y="15" style="fill:#F0C2B5;font-size:11px">Client records stay in the practitioner's systems</text></g>
+            </g>
+            <g class="zone local is-notbuilt dim-today">
+              <rect x="690" y="330" width="400" height="84" rx="12"/>
+              <text x="708" y="354">Local device runtime — optional</text>
+              <text class="s" x="708" y="373">Runs on the practitioner's laptop, only with tools they authorize</text>
+              <text class="s" x="708" y="391">Pauses at a permission checkpoint before acting</text>
+            </g>
+          </g>
+        </svg></div>
+        <aside class="panel" id="panel" aria-live="polite"></aside>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="sections">
+  <section class="sec" id="sec-diag">
+    <div class="sec-head"><div><h2>Where it starts: the business diagnostic</h2>
+      <p class="lead" id="diagLead">A human-led review of how people find, book and return to you, using 18 candidate business checks across four areas.</p></div>
+      <div><span class="st today">Exists today · candidate checklist V0.1</span></div></div>
+    <div class="grid4" id="checks"></div>
+    <div class="hc is-inactive dim-today">
+      <div class="sec-head"><h3 style="margin:0 0 8px;font-size:14px">Human Context — four dimensions</h3><span class="st inactive">Inactive · optional · unscored</span></div>
+      <div class="tiles" id="hcTiles"></div>
+      <p style="margin:8px 0 0;font-size:12.5px;color:var(--ink-3)">Never scored, never changes a recommendation or price. Requires separate consent and a human facilitator. Collects nothing today.</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap">
+      <button class="btn primary" id="scanBtn">Run an example scan</button>
+      <span class="result" id="scanResult">Example scan uses illustrative findings, not a real practitioner.</span>
+    </div>
+  </section>
+
+  <section class="sec" id="sec-out">
+    <div class="sec-head"><div><h2>Four equal outcomes</h2><p class="lead">The practitioner chooses what happens next. No automatic upsell, and nobody needs an expensive build to benefit.</p></div><span class="st approved">Approved approach</span></div>
+    <div class="outcomes">
+      <div class="oc"><h3>Self-serve</h3><p>You fix it yourself with clear instructions.</p></div>
+      <div class="oc"><h3>Implementation</h3><p>HAMAL builds the approved fix, scoped in writing first.</p></div>
+      <div class="oc"><h3>Referral</h3><p>A specialist is the right person for this.</p></div>
+      <div class="oc"><h3>No action</h3><p>Nothing further is needed. That is an honest result.</p></div>
+    </div>
+  </section>
+
+  <section class="sec" id="sec-bound">
+    <div class="sec-head"><div><h2>Boundaries you can see</h2><p class="lead">Where work runs, and what may never leave a practitioner's private space.</p></div></div>
+    <div class="two">
+      <div class="box is-notbuilt dim-today">
+        <div class="sec-head"><h3>Local versus cloud</h3><span class="st notbuilt">Not built</span></div>
+        <div class="lanes">
+          <div class="lane"><b>Cloud</b><br>The practitioner's own booking, payment and CRM accounts, connected with permission.</div>
+          <div class="lane local"><b>Local device</b><br>An optional runtime on their own computer. Only authorized tools; a checkpoint before every action.</div>
+        </div>
+        <p class="eng-only" style="font-size:12.5px;color:var(--ink-3);margin:10px 0 0">Engineering: no unrestricted device access; scoped credentials per integration; action log per task; consequential actions require recorded approval.</p>
+      </div>
+      <div class="box">
+        <div class="sec-head"><h3>Private versus shared knowledge</h3><span class="st approved">Approved principle · store design proposed</span></div>
+        <div class="flow">
+          <span class="chip private">Client-private: answers, reports, notes, access</span>
+          <span class="wall" aria-hidden="true"></span>
+          <span class="chip">Sanitize</span><span class="arrow">→</span><span class="chip">Review</span>
+          <span class="oneway" aria-hidden="true"><span class="glow"></span></span>
+          <span class="chip shared">Shared HAMAL library: checks, templates, tests</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink-2);margin:10px 0 0">Learning crosses one way only. Private client information never becomes shared agent memory or public research.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="sec-adopt">
+    <div class="sec-head"><div><h2>Did it actually get used?</h2><p class="lead">Every delivered system is followed from built to still in use. A feature nobody uses is a design lesson for HAMAL, not a failure by the practitioner.</p></div><span class="st proposed">Proposed tracking model</span></div>
+    <div class="rings" id="rings">
+      <div class="ring"><svg viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="32"/><circle class="fg" cx="38" cy="38" r="32"/></svg>Built</div>
+      <div class="ring"><svg viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="32"/><circle class="fg" cx="38" cy="38" r="32"/></svg>Activated</div>
+      <div class="ring"><svg viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="32"/><circle class="fg" cx="38" cy="38" r="32"/></svg>In use at 30 days</div>
+      <span class="arrow" style="font-size:20px">·</span>
+      <div class="ring muted"><svg viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="32"/><circle class="fg" cx="38" cy="38" r="32"/></svg>Not used → lesson logged</div>
+      <button class="btn" id="ringBtn">Play example</button>
+    </div>
+  </section>
+
+  <section class="sec is-proposed dim-today" id="sec-school">
+    <div class="sec-head"><div><h2>For training schools</h2><p class="lead">A school can offer business support after certification. Each graduate gets an independent workspace; HAMAL provides the implementation behind the scenes.</p></div><span class="st proposed">Potential partnership model · no agreements exist</span></div>
+    <div class="schoolviz">
+      <div class="school">Example training school</div>
+      <span class="arrow" style="font-size:22px">→</span>
+      <div class="wss">
+        <div class="ws"><b>Graduate A</b>Own workspace</div><div class="ws"><b>Graduate B</b>Own workspace</div><div class="ws"><b>Graduate C</b>Own workspace</div>
+        <div class="ws"><b>Graduate D</b>Own workspace</div><div class="ws"><b>Graduate E</b>Own workspace</div><div class="ws"><b>Graduate F</b>Own workspace</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-2);margin:12px 0 0">The school sees program participation, never a graduate's client records. Illustrative names and structure.</p>
+  </section>
+
+  <section class="sec" id="sec-legend">
+    <h2>What exists today, and what we're building toward</h2>
+    <p class="lead">Every element on this page carries one of these labels.</p>
+    <div class="legend">
+      <div class="lg"><span class="st today">Exists today</span><p style="margin:6px 0 0">Real and usable now.</p></div>
+      <div class="lg"><span class="st approved">Approved</span><p style="margin:6px 0 0">Decided direction or principle; tooling may not exist yet.</p></div>
+      <div class="lg"><span class="st proposed">Proposed</span><p style="margin:6px 0 0">Designed concept, not decided or built.</p></div>
+      <div class="lg"><span class="st inactive">Inactive</span><p style="margin:6px 0 0">Drafted, switched off, collects nothing.</p></div>
+      <div class="lg"><span class="st notbuilt">Not built</span><p style="margin:6px 0 0">Future capability shown for explanation.</p></div>
+    </div>
+    <ul class="today-list">
+      <li><b>Exists today:</b> the diagnostic method (human-led), the 18-check candidate list, a reusable intake structure, and a few proven building blocks (single enquiry routing, regression tests that block fake confirmations).</li>
+      <li><b>Not yet:</b> no paid diagnostics delivered, no measured results, no live dashboard, no automated agent engine, no local runtime.</li>
+    </ul>
+  </section>
+</div>
+
+<footer class="foot">
+  <p class="p">The practitioner sees simplicity. HAMAL handles the complexity. The practitioner retains control.</p>
+  <small>SPARK LAB — Powered by HAMAL (Hanzo, Art Mob AGInts, Lux). Concept demonstration: illustrative interface, fictional names, no client data, no performance claims.</small>
+</footer>
+</main>
+
+<script>
+(function(){
+const B=document.body, $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const RMQ=matchMedia('(prefers-reduced-motion: reduce)');
+let reduced=RMQ.matches; if(reduced) B.classList.add('rm');
+
+const MODEQ={practitioner:'What can SPARK LAB do for my business?',school:'How can we support graduates after certification?',eng:'How do agents, integrations, approvals and private data work?'};
+
+/* node geometry: x center, y center, h */
+const NODES=[
+ {id:0,x:74,y:150,h:72,st:'proposed'},
+ {id:1,x:234,y:150,h:72,st:'proposed'},
+ {id:2,x:394,y:95,h:64,st:'proposed'},
+ {id:3,x:394,y:205,h:64,st:'proposed'},
+ {id:4,x:554,y:150,h:72,st:'approved',gate:true},
+ {id:5,x:714,y:150,h:72,st:'notbuilt'},
+ {id:6,x:874,y:150,h:72,st:'approved'},
+ {id:7,x:1034,y:150,h:72,st:'notbuilt'}
+];
+const LABELS={
+ practitioner:[['Your request','in your own words'],['Shape the offer','who, what, how'],['Draft the page','words + images'],['Draft the booking','flow + follow-up'],['You approve','you stay in control'],['Go live','in your accounts'],['Check it works','a test enquiry'],['Back to you','ready for review']],
+ school:[['Graduate request','their own words'],['Shape the offer','who, what, how'],['Draft the page','words + images'],['Draft the booking','flow + follow-up'],['Graduate approves','they stay in control'],['Go live','their own accounts'],['Check it works','a test enquiry'],['Back to them','ready for review']],
+ eng:[['Intake event','task opened'],['Business Architect','offer + journey'],['Creative Studio','page, copy, assets'],['Systems Engineer','booking, CRM config'],['Approval gate','recorded consent'],['Authorized run','scoped actions'],['Verification','test enquiry · BI'],['Dashboard return','result + log']]
+};
+const STL={today:'EXISTS TODAY',approved:'APPROVED',proposed:'PROPOSED',inactive:'INACTIVE',notbuilt:'NOT BUILT'};
+
+/* stages: which nodes light, which segments animate in */
+const STAGES=[
+ {name:'Request',nodes:[0],segs:[],ho:null},
+ {name:'Architect',nodes:[1],segs:['seg0'],ho:{x:154,y:78,t:'Request + intake'}},
+ {name:'Prepare',nodes:[2,3],segs:['seg1a','seg1b'],ho:{x:314,y:28,t:'Offer outline (draft)'}},
+ {name:'Approve',nodes:[4],segs:['seg2a','seg2b'],ho:{x:474,y:28,t:'Drafts for review'}},
+ {name:'Execute',nodes:[5],segs:['seg3'],ho:{x:634,y:78,t:'Approved plan'}},
+ {name:'Verify',nodes:[6],segs:['seg4'],ho:{x:794,y:78,t:'Live changes'}},
+ {name:'Return',nodes:[7],segs:['seg5'],ho:{x:954,y:78,t:'Verified result'}}
+];
+const T={
+ practitioner:[
+  {h:'You ask, in your own words',w:'"Help me launch private sessions." No forms to decode, no tools to learn.',a:'Your business companion',o:'Your request',c:'You decide what to ask for.',r:'SPARK LAB front door',s:'notbuilt'},
+  {h:'The offer takes shape',w:'Who private sessions are for, how long they run, what they cost to book, what happens before and after.',a:'Business Architect',o:'An offer outline, as a draft',c:'It stays a draft until you approve.',r:'HAMAL',s:'proposed'},
+  {h:'Drafts are prepared together',w:'One specialist drafts the offer page and welcome message. Another prepares the booking flow and follow-up. Nothing is live yet.',a:'Creative Studio · Systems Engineer',o:'Page, booking flow and follow-up, all drafts',c:'Drafts only. Nothing is sent or published.',r:'HAMAL',s:'proposed'},
+  {h:'You approve, or you don’t',w:'You review everything. Change it, approve it, or say "not now". Nothing consequential goes live without your authorization.',a:'You',o:'Your decision',c:'This is the control point. You can stop here.',r:'Your dashboard',s:'approved'},
+  {h:'Only then does it go live',w:'With your approval, the page is published and the booking flow is switched on in your own accounts.',a:'Systems Engineer · Client Operations',o:'Live page and booking flow',c:'Only the actions you approved, in tools you connected.',r:'Your own accounts',s:'notbuilt'},
+  {h:'Checked end to end',w:'A test enquiry travels your whole booking path and lands in your own client list, so you see it work. A booking only shows as confirmed when your booking system confirms it.',a:'Business Intelligence',o:'A verified test enquiry',c:'You witness the test.',r:'Your own accounts',s:'approved'},
+  {h:'Back on your dashboard',w:'"Your booking page is ready for review." The simple screen you started from, with the work done behind it.',a:'Your business companion',o:'A result you can see',c:'You choose what happens next.',r:'Your dashboard',s:'notbuilt'}
+ ],
+ school:[
+  {h:'A graduate asks for help',w:'A newly certified teacher asks to launch their first paid offer, in plain language.',a:'Their business companion',o:'Their request',c:'The graduate decides what to ask for.',r:'Their own SPARK LAB workspace',s:'notbuilt'},
+  {h:'The offer takes shape',w:'Their offer is structured around their teaching, not a generic template.',a:'Business Architect',o:'An offer outline, as a draft',c:'Draft until the graduate approves.',r:'HAMAL',s:'proposed'},
+  {h:'Drafts are prepared',w:'Page, booking flow and follow-up are drafted by specialists working together.',a:'Creative Studio · Systems Engineer',o:'Drafts',c:'Nothing goes live yet.',r:'HAMAL',s:'proposed'},
+  {h:'The graduate approves',w:'Every graduate stays in control of their own business. The school never approves on their behalf.',a:'The graduate',o:'Their decision',c:'The control point belongs to the practitioner.',r:'Their dashboard',s:'approved'},
+  {h:'It goes live in their accounts',w:'Approved work is switched on in the graduate’s own tools, so they own what is built.',a:'Systems Engineer · Client Operations',o:'Live page and booking flow',c:'Only approved actions.',r:'The graduate’s accounts',s:'notbuilt'},
+  {h:'Checked end to end',w:'A test enquiry proves the path works before the graduate relies on it.',a:'Business Intelligence',o:'A verified test enquiry',c:'The graduate witnesses it.',r:'The graduate’s accounts',s:'approved'},
+  {h:'Support after certification',w:'Your school offers business support without building a tech team. HAMAL provides the implementation behind the scenes.',a:'HAMAL, for your graduates',o:'A working system each graduate owns',c:'The school sees participation, not client records.',r:'Graduate workspaces',s:'proposed'}
+ ],
+ eng:[
+  {h:'Intake event',w:'Front-door request creates a task. Orchestrator sets scope, required permissions and approval policy.',a:'Orchestrator',o:'Task record (scope, permissions)',c:'No action permissions granted at this stage.',r:'Cloud · HAMAL',s:'proposed'},
+  {h:'Business Architect',w:'Drafts offer structure and client journey from intake and diagnostic findings (e.g. C1–C4, A3).',a:'Business Architect',o:'Offer spec (draft artifact)',c:'Draft state; not executable.',r:'Cloud · HAMAL',s:'proposed'},
+  {h:'Parallel drafting',w:'Creative Studio drafts page copy and assets. Systems Engineer stages booking, CRM and follow-up configuration without applying it.',a:'Creative Studio · Systems Engineer',o:'Page draft · staged integration config',c:'Staged only. Dotted edges = drafts.',r:'Cloud · HAMAL',s:'proposed'},
+  {h:'Approval gate',w:'Consequential actions (publish, send, payment, booking changes) are blocked until practitioner approval is recorded against the task.',a:'Practitioner (human decision)',o:'Signed approval on the task',c:'Hard gate. Principle approved; tooling not built.',r:'SPARK LAB dashboard',s:'approved'},
+  {h:'Authorized execution',w:'Approved actions run against practitioner-owned integrations with scoped credentials, or via the optional local runtime. Every action logged. Solid edges = authorized.',a:'Systems Engineer · Client Operations',o:'Applied config · action log',c:'Only actions listed in the approval.',r:'Cloud integrations · optional local runtime',s:'notbuilt'},
+  {h:'Verification',w:'End-to-end test enquiry must arrive in the practitioner’s CRM, witnessed. Booking state shown as confirmed only on booking-system confirmation.',a:'Business Intelligence',o:'Verification record',c:'Definition of done, not a dashboard claim.',r:'Practitioner’s own systems',s:'approved'},
+  {h:'Dashboard return + adoption',w:'Result and action log returned to the dashboard. Tracking begins: built → activated → in use at 30 days. Sanitized lessons cross to the shared library.',a:'Orchestrator · Business Intelligence',o:'Adoption record · sanitized lesson',c:'Private data stays on the private side.',r:'Cloud · private store (proposed)',s:'notbuilt'}
+ ]
+};
+
+/* build nodes */
+const nodesG=$('#nodes'), NS='http://www.w3.org/2000/svg';
+function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+NODES.forEach(n=>{
+  const g=el('g',{class:'n'+(n.gate?' gate':'')+' is-'+n.st+' dim-today','data-node':n.id,tabindex:0,role:'button'},nodesG);
+  el('rect',{x:n.x-64,y:n.y-n.h/2,width:128,height:n.h,rx:12},g);
+  if(n.gate){const ic=el('g',{transform:`translate(${n.x-8} ${n.y-n.h/2+8})`},g);el('path',{d:'M3 9V4.5a1.3 1.3 0 0 1 2.6 0V8M5.6 8V3a1.3 1.3 0 0 1 2.6 0v5M8.2 8V3.8a1.3 1.3 0 0 1 2.6 0V9M10.8 9V6a1.3 1.3 0 0 1 2.6 0v4c0 3-2 5-5 5H8c-2 0-3-1-4-2.5L2 9.5a1.2 1.2 0 0 1 2-1.3L5 9.5',fill:'none',stroke:'#7FD1B3','stroke-width':1.1},ic)}
+  el('text',{class:'t1',x:n.x,y:n.y+(n.gate?6:-2),'text-anchor':'middle'},g);
+  el('text',{class:'sub',x:n.x,y:n.y+(n.gate?20:14),'text-anchor':'middle'},g);
+  el('text',{class:'badge eng-only',x:n.x,y:n.y-n.h/2-6,'text-anchor':'middle'},g).textContent=STL[n.st];
+  g.addEventListener('click',()=>goStage(stageOfNode(n.id),true));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();goStage(stageOfNode(n.id),true)}});
+});
+function stageOfNode(id){return STAGES.findIndex(s=>s.nodes.includes(id))}
+function paintLabels(){
+  const L=LABELS[B.dataset.mode];
+  $$('#nodes .n').forEach(g=>{const i=+g.dataset.node;g.querySelector('.t1').textContent=L[i][0];g.querySelector('.sub').textContent=L[i][1]});
+}
+/* handoff pill */
+const hoG=$('#handoffs'), ho=el('g',{class:'handoff'},hoG), hoR=el('rect',{rx:8,height:22},ho), hoT=el('text',{},ho);
+function showHandoff(h){
+  if(!h){ho.classList.remove('show');return}
+  hoT.textContent=h.t; const w=h.t.length*6.3+22;
+  hoR.setAttribute('x',h.x-w/2);hoR.setAttribute('y',h.y);hoR.setAttribute('width',w);
+  hoT.setAttribute('x',h.x);hoT.setAttribute('y',h.y+15);hoT.setAttribute('text-anchor','middle');
+  ho.classList.remove('show');void ho.getBBox();ho.classList.add('show');
+}
+/* stage pills */
+const pills=$('#pills');
+STAGES.forEach((s,i)=>{const b=document.createElement('button');b.className='pill';b.role='tab';b.textContent=(i+1)+' · '+s.name;b.onclick=()=>goStage(i,true);pills.appendChild(b)});
+
+/* stage engine */
+let stage=0, playing=false, timer=null, raf=null, intro=[];
+function clearIntro(){intro.forEach(clearTimeout);intro=[]}
+function animSeg(id,pulse,done){
+  const p=document.getElementById(id), L=p.getTotalLength();
+  if(reduced){const e=p.getPointAtLength(L);pulse.setAttribute('cx',e.x);pulse.setAttribute('cy',e.y);pulse.setAttribute('opacity',1);done&&done();return}
+  const t0=performance.now(),D=900;pulse.setAttribute('opacity',1);
+  (function f(t){const u=Math.min(1,(t-t0)/D),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,q=p.getPointAtLength(e*L);
+    pulse.setAttribute('cx',q.x);pulse.setAttribute('cy',q.y);if(u<1)requestAnimationFrame(f);else done&&done()})(t0);
+}
+function goStage(i,user){
+  stage=(i+STAGES.length)%STAGES.length;const s=STAGES[stage];
+  if(user){clearIntro();if(playing)togglePlay(false)}
+  $$('#nodes .n').forEach(g=>{const id=+g.dataset.node;g.classList.remove('on');
+    const firstStage=stageOfNode(id);g.classList.toggle('done',firstStage<stage)});
+  $$('.edge').forEach(e=>e.classList.remove('lit'));
+  STAGES.slice(1,stage+1).forEach(st=>st.segs.forEach(id=>document.getElementById(id).classList.add('lit')));
+  const pa=$('#pulseA'),pb=$('#pulseB');pb.setAttribute('opacity',0);
+  const light=()=>s.nodes.forEach(id=>$(`#nodes .n[data-node="${id}"]`).classList.add('on'));
+  if(s.segs.length){animSeg(s.segs[0],pa,light);if(s.segs[1])animSeg(s.segs[1],pb)}
+  else{const n=NODES[s.nodes[0]];pa.setAttribute('cx',n.x);pa.setAttribute('cy',n.y-n.h/2-0);pa.setAttribute('opacity',0);light()}
+  showHandoff(s.ho);
+  [...pills.children].forEach((b,j)=>b.setAttribute('aria-current',j===stage));
+  paintPanel();
+  $('#cap').textContent=captionFor(stage);
+}
+function captionFor(i){
+  const m=B.dataset.mode;
+  if(i===4) return m==='eng'?'Hard gate: nothing consequential executes without recorded approval.':'Nothing goes live without your yes.';
+  if(i===6) return m==='school'?'Each graduate owns a working system. Your school offers the support.':'The work happened behind the glass. You stayed in control.';
+  if(i===0) return m==='eng'?'One example task, end to end.':'One request. Watch where it goes.';
+  return '';
+}
+function paintPanel(){
+  const d=T[B.dataset.mode][stage];
+  $('#panel').innerHTML=`<span class="st ${d.s}">${{today:'Exists today',approved:'Approved principle',proposed:'Proposed',inactive:'Inactive',notbuilt:'Not built'}[d.s]}</span>
+  <div class="panel-grid"><div><h4>${d.h}</h4><p style="margin:0;color:#D6D0C2">${d.w}</p></div>
+  <dl style="margin:0"><dt>Who does it</dt><dd>${d.a}</dd><dt>Hands off</dt><dd>${d.o}</dd><dt>Human control</dt><dd>${d.c}</dd><dt>Runs in</dt><dd>${d.r}</dd></dl></div>
+  <p style="margin:12px 0 0;font-size:11.5px;color:#8E8879">Demonstration workflow. Illustrative, not a production feature.</p>`;
+}
+function togglePlay(on){
+  playing=on===undefined?!playing:on;const b=$('#playBtn');b.setAttribute('aria-pressed',playing);b.textContent=playing?'Pause':'Play';
+  clearInterval(timer);if(playing){if(stage===STAGES.length-1)goStage(0);timer=setInterval(()=>{if(stage===STAGES.length-1){togglePlay(false);return}goStage(stage+1)},reduced?3200:2800)}
+}
+
+/* the signature transition */
+function toEngine(){
+  if(B.dataset.view==='engine')return;
+  const go=()=>{B.classList.remove('lifting');B.dataset.view='engine';$('#engine').setAttribute('aria-hidden','false');$('#dash').setAttribute('aria-hidden','true');
+    const svg=$('#esvg');svg.classList.remove('reveal');void svg.getBBox();
+    $('#cap').textContent='Behind your dashboard, specialists prepared this — and waited for your approval.';
+    goStage(6);clearIntro();intro.push(setTimeout(()=>svg.classList.add('reveal'),reduced?0:700));
+    intro.push(setTimeout(()=>{goStage(0);$('#cap').textContent='One request. Watch where it goes.';if(!reduced)togglePlay(true)},reduced?600:3400));
+    $('#playBtn').focus({preventScroll:true});
+  };
+  if(reduced){go();return}
+  B.classList.add('lifting');setTimeout(go,750);
+}
+function toDash(){clearIntro();togglePlay(false);B.dataset.view='dash';$('#engine').setAttribute('aria-hidden','true');$('#dash').setAttribute('aria-hidden','false');$('#howBtn').focus({preventScroll:true})}
+
+/* modes, scope, expand, reduced */
+function setMode(m){clearIntro();B.dataset.mode=m;$$('.seg:not(.scope) button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===m));
+  $('#modeQ').textContent=MODEQ[m];setExpanded(m==='eng');paintLabels();paintChecks();goStage(stage);}
+function setExpanded(v){B.dataset.expanded=v;$('#esvg').setAttribute('viewBox',v?'0 0 1110 430':'0 0 1110 250');$('#expBtn').setAttribute('aria-pressed',v);$('#expBtn').textContent=v?'Collapse engine':'Expand engine'}
+$$('.seg:not(.scope) button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+$$('.seg.scope button').forEach(b=>b.onclick=()=>{B.dataset.scope=b.dataset.scope;$$('.seg.scope button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+$('#expBtn').onclick=()=>setExpanded(B.dataset.expanded!=='true');
+$('#rmBtn').onclick=()=>{reduced=!reduced;B.classList.toggle('rm',reduced);$('#rmBtn').setAttribute('aria-pressed',reduced)};
+$('#rmBtn').setAttribute('aria-pressed',reduced);
+$('#howBtn').onclick=toEngine;$('#backBtn').onclick=toDash;
+$('#reviewBtn').onclick=()=>{$('#companion').animate?.([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:400});$('#companion small').textContent='Demonstration only — no real page to open'};
+$('#playBtn').onclick=()=>{clearIntro();togglePlay()};$('#prevBtn').onclick=()=>goStage(stage-1,true);$('#nextBtn').onclick=()=>goStage(stage+1,true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&B.dataset.view==='engine')toDash()});
+
+/* diagnostic */
+const CHECKS=[
+ ['Booking and discovery',[['A1','No booking link, or a broken one',3],['A2','Booking link hard to find',3],['A3','No clear next step on the offer page',2],['A4','Offer described in insider language',2],['A5','No social proof near booking',2]]],
+ ['Follow-up and retention',[['B1','No follow-up after a session',3],['B2','Follow-up manual and inconsistent',2],['B3','No re-booking prompt',2],['B4','No referral ask',1],['B5','No email list or lead capture',2]]],
+ ['Offer clarity',[['C1','Several offers, no clear primary',2],['C2','Price not stated',2],['C3','No defined client journey',1],['C4','Offer scope not bounded',1]]],
+ ['Business infrastructure',[['E1','No client list or CRM',1],['E2','Scheduling tool missing or wrong tier',1],['E3','Payment friction',2],['E4','No onboarding automation',1]]]
+];
+const HC=[['D1','Decision friction'],['D2','Visibility and expression comfort'],['D3','Capacity and pacing preferences'],['D4','Identity, beliefs and readiness']];
+function paintChecks(){
+  const eng=B.dataset.mode==='eng';
+  $('#checks').innerHTML=CHECKS.map(([g,items])=>`<div class="grp"><h3>${g} · ${items.length}</h3><div class="tiles">${items.map(([id,t,s])=>`<div class="tile" data-id="${id}">${eng?`<span class="id">${id}</span>`:''}${t}${eng?`<span class="sev">sev ${s}</span>`:''}</div>`).join('')}</div></div>`).join('');
+  $('#hcTiles').innerHTML=HC.map(([id,t])=>`<div class="tile">${eng?`<span class="id">${id}</span>`:''}${t}</div>`).join('');
+  $('#diagLead').textContent=eng?'STB diagnostic methodology (internal name): 18 candidate business checks (A1–A5, B1–B5, C1–C4, E1–E4), severity 1–3, evidence-coded FRW/RES/HYP. None yet observed in a paid engagement.':'A human-led review of how people find, book and return to you, using 18 candidate business checks across four areas.';
+}
+paintChecks();
+$('#scanBtn').onclick=()=>{
+  const tiles=$$('#checks .tile');tiles.forEach(t=>t.classList.remove('scan','top'));
+  $('#scanResult').textContent='Scanning example business…';
+  tiles.forEach((t,i)=>setTimeout(()=>t.classList.add('scan'),reduced?0:i*90));
+  setTimeout(()=>{tiles.forEach(t=>t.classList.remove('scan'));const top=$('#checks .tile[data-id="A2"]');top.classList.add('top');
+    $('#scanResult').innerHTML='<b>Most important fix (example):</b> the booking link is hard to find. Options: self-serve, implementation, referral or no action.'},reduced?50:tiles.length*90+400);
+};
+$('#ringBtn').onclick=()=>{const r=$('#rings');r.classList.remove('run');void r.offsetWidth;r.classList.add('run')};
+
+/* init */
+setExpanded(false);paintLabels();goStage(0);
+const q=new URLSearchParams(location.search);
+if(q.get('mode'))setMode(q.get('mode'));
+if(q.get('scope')){B.dataset.scope=q.get('scope');$$('.seg.scope button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.scope===q.get('scope')))}
+if(q.get('view')==='engine'){reduced=true;B.classList.add('rm');toEngine();if(q.get('stage'))goStage(+q.get('stage'));if(q.get('rm')!=='1'){reduced=RMQ.matches;B.classList.toggle('rm',reduced)}}
+})();
+</script>
+</body>
+</html>
