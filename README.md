@@ -32,6 +32,7 @@ eventually become one.
 | [Engagement storage proposal](docs/01-decisions/PROPOSAL-engagement-storage.md) | **Proposed, not approved** — where private records would live |
 | [Adoption data model](docs/00-canonical/ADOPTION-DATA-MODEL.md) | **Proposed schema** for tracking whether delivered items are built, activated and in use after 30 days |
 | [Human Context protocols](docs/04-protocols/human-context/README.md) | **DRAFT — INACTIVE.** Consent, access, deletion, facilitator and referral protocols for the optional module. Nothing here authorises collecting data |
+| [Visualization brief](docs/05-handover/VISUALIZATION-BRIEF.md) | A plain-language walk-through of the flow, the agents, and the front door/back end, written for engineers and for explainer graphics. A derived summary, not a decision source |
 | [AGENTS.md](AGENTS.md) | Entry point for non-Claude agents; defers to `CLAUDE.md` |
 
 Before committing, run `python3 scripts/check-docs.py`.
