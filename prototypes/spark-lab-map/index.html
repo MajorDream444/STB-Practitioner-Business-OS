@@ -8,7 +8,7 @@
 <style>
 :root{
   --cream:#F6F1E7; --cream-2:#EFE7D8; --paper:#FFFDF8;
-  --ink:#1C1F1E; --ink-2:#4A4F4C; --ink-3:#7A7F7B;
+  --ink:#1C1F1E; --ink-2:#4A4F4C; --ink-3:#5F6460;
   --emerald:#0F5C4A; --emerald-2:#1F7A63; --emerald-soft:#DCEDE5;
   --gold:#C9A45C; --gold-2:#E2C88E; --gold-soft:#F4EAD3;
   --char:#14181A; --char-2:#1D2326; --char-3:#2A3236;
@@ -89,7 +89,7 @@ body[data-mode="school"] .school-strip{display:block}
 .ebtn[aria-pressed="true"]{background:var(--gold);color:var(--char);border-color:var(--gold)}
 .pills{display:flex;flex-wrap:wrap;gap:6px;position:relative}
 .pill{border:1px solid rgba(226,200,142,.25);background:transparent;color:#BDB6A6;border-radius:999px;padding:4px 10px;font-size:12.5px}
-.pill[aria-current="true"]{background:rgba(201,164,92,.18);color:#F4E6C4;border-color:var(--gold)}
+.pill[aria-pressed="true"]{background:rgba(201,164,92,.18);color:#F4E6C4;border-color:var(--gold)}
 .e-body{position:relative;display:flex;flex-direction:column;gap:12px}
 .svgwrap{overflow-x:auto;min-width:0}
 .layer,.e-body{min-width:0}
@@ -98,7 +98,7 @@ body[data-mode="school"] .school-strip{display:block}
 .panel{background:rgba(255,255,255,.04);border:1px solid rgba(226,200,142,.22);border-radius:16px;padding:14px 16px;font-size:13.5px}
 .panel h4{margin:0 0 4px;font-family:var(--serif);font-weight:500;font-size:19px;color:#F4EFE3}
 .panel dl{margin:8px 0 0}
-.panel dt{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#958E7F;margin-top:9px}
+.panel dt{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#ADA592;margin-top:9px}
 .panel dd{margin:1px 0 0;color:#E2DCCE}
 .today-note{position:relative;display:none;font-size:13px;color:#F1D9A6;background:rgba(201,164,92,.12);border:1px dashed var(--gold);border-radius:12px;padding:8px 12px}
 body[data-scope="today"] .today-note{display:block}
@@ -106,8 +106,18 @@ body[data-scope="today"] .today-note{display:block}
 /* svg nodes */
 .n rect{fill:#1E2427;stroke:rgba(226,200,142,.35);stroke-width:1;transition:fill .5s,stroke .5s}
 .n text{fill:#CFC8B8;font:500 13.5px var(--sans);transition:fill .5s}
-.n .sub{fill:#8E8879;font:400 11.5px var(--sans)}
-.n .badge{font:500 9.5px var(--sans);letter-spacing:.06em;fill:#958E7F}
+.n .sub{fill:#ABA493;font:400 11.5px var(--sans)}
+.n .badge{font:600 9.5px var(--sans);letter-spacing:.06em;fill:#B9B19E}
+.n.is-today .badge{fill:#8FD6A8}
+.n:focus{outline:none}
+.n:focus-visible rect{stroke:#fff;stroke-width:2}
+.alt rect{fill:#1A1F22;stroke:rgba(255,255,255,.22);stroke-dasharray:3 3}
+.alt text{fill:#ABA493;font:500 11px var(--sans)}
+#alts{transition:opacity .5s;opacity:.75}
+#alts.on{opacity:1}
+#alts.on .alt rect{stroke:rgba(226,200,142,.6)}
+.st-row{display:flex;flex-wrap:wrap;gap:6px}
+.pnote{margin:12px 0 0;font-size:11.5px;color:#A39C8B}
 .n.on rect{fill:#3A3426;stroke:var(--gold)}
 .n.on text{fill:#FFF6DF}
 .n.done rect{stroke:rgba(226,200,142,.6)}
@@ -126,19 +136,19 @@ body[data-scope="today"] .today-note{display:block}
 .handoff.show{opacity:1}
 .zone rect{fill:rgba(255,255,255,.025);stroke:rgba(255,255,255,.14)}
 .zone.local rect{stroke-dasharray:4 4}
-.zone text{fill:#A9A292;font:500 11.5px var(--sans)}
-.zone .s{font-weight:400;fill:#7E786B;font-size:10.5px}
+.zone text{fill:#C2BBAA;font:500 11.5px var(--sans)}
+.zone .s{font-weight:400;fill:#A19A8A;font-size:10.5px}
 .orch rect{fill:rgba(201,164,92,.07);stroke:rgba(226,200,142,.3)}
 .orch text{fill:#D9C796;font:500 12px var(--sans)}
 .lower{transition:opacity .6s}
-body:not([data-expanded="true"]) .lower{opacity:0;pointer-events:none}
+body:not([data-expanded="true"]) .lower{display:none}
 .eng-only{display:none}
 body[data-mode="eng"] .eng-only{display:revert}
 body[data-mode="eng"] svg .eng-only{display:inline}
 .dim-today{transition:opacity .5s}
-body[data-scope="today"] .sec.is-proposed,body[data-scope="today"] .box.is-notbuilt,body[data-scope="today"] .hc.is-inactive,body[data-scope="today"] .lower{opacity:.28}
+body[data-scope="today"] .sec.is-proposed,body[data-scope="today"] .box.is-notbuilt,body[data-scope="today"] .hc.is-inactive,body[data-scope="today"] .lower,body[data-scope="today"] #alts{opacity:.55}
 body[data-scope="today"] .n.is-proposed rect,body[data-scope="today"] .n.is-notbuilt rect{stroke:rgba(255,255,255,.18);stroke-dasharray:3 4}
-body[data-scope="today"] .n.is-proposed text,body[data-scope="today"] .n.is-notbuilt text{opacity:.38}
+body[data-scope="today"] .n.is-proposed text,body[data-scope="today"] .n.is-notbuilt text{opacity:.72}
 body[data-scope="today"] svg .badge{display:inline;opacity:1!important;fill:#E2C88E}
 .pulse{fill:#FFE7A8;filter:drop-shadow(0 0 6px rgba(255,214,130,.9))}
 
@@ -165,7 +175,7 @@ body[data-mode="school"] #sec-school{order:-1}
 .tile.top{background:var(--gold-soft);border-color:var(--gold);transform:translateX(4px)}
 .hc{margin-top:14px;border:1px dashed #B9B3A6;border-radius:14px;padding:12px;background:repeating-linear-gradient(135deg,#FAF8F3 0 10px,#F4F1EA 10px 20px)}
 .hc .tiles{flex-direction:row;flex-wrap:wrap}
-.hc .tile{background:rgba(255,255,255,.7);color:var(--ink-3);border-style:dashed}
+.hc .tile{background:rgba(255,255,255,.85);color:var(--ink-2);border-style:dashed}
 .result{margin-top:12px;font-size:14px;min-height:22px;color:var(--ink-2)}
 .outcomes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .oc{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
@@ -198,6 +208,10 @@ body[data-mode="school"] #sec-school{order:-1}
 .rings.run .ring:nth-child(2) circle.fg{stroke-dashoffset:0;transition-delay:.8s}
 .rings.run .ring:nth-child(3) circle.fg{stroke-dashoffset:0;transition-delay:1.6s}
 .rings.run .ring:nth-child(5) circle.fg{stroke-dashoffset:120;transition-delay:2.4s}
+.gjourney{list-style:none;margin:0 0 16px;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;counter-reset:g}
+.gjourney li{counter-increment:g;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;font-size:13px;color:var(--ink-2)}
+.gjourney li::before{content:counter(g);display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--emerald-soft);color:var(--emerald);font-size:11.5px;font-weight:600;margin-bottom:6px}
+.gjourney b{display:block;color:var(--ink);font-size:13.5px}
 .schoolviz{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .school{border:1px solid var(--emerald-2);background:var(--emerald-soft);color:var(--emerald);border-radius:14px;padding:14px 16px;font-weight:600}
 .wss{display:grid;grid-template-columns:repeat(3,minmax(0,120px));gap:8px}
@@ -226,7 +240,7 @@ body[data-mode="school"] #sec-school{order:-1}
   .cards,.grid4,.outcomes{grid-template-columns:repeat(2,minmax(0,1fr))}
   .svgwrap .e-svg{min-width:860px}
   .panel-grid{grid-template-columns:1fr}
-  .two,.lanes{grid-template-columns:1fr}
+  .two,.lanes,.gjourney,.gvalue{grid-template-columns:1fr}
   .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
   .d-hello{font-size:28px}
   .scene{min-height:0}
@@ -234,6 +248,7 @@ body[data-mode="school"] #sec-school{order:-1}
 /* reduced motion */
 body.rm *,body.rm *::before,body.rm *::after{transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-delay:0s!important}
 body.rm[data-view="engine"] #dash{transform:none}
+@media (max-width:520px){.st{white-space:normal}.cards{grid-template-columns:1fr}#dash{padding:14px}.glass{padding:18px 16px}.sec{padding:16px}.companion{flex-wrap:wrap}}
 </style>
 </head>
 <body data-mode="practitioner" data-view="dash" data-scope="vision" data-expanded="false">
@@ -283,15 +298,15 @@ body.rm[data-view="engine"] #dash{transform:none}
         <div class="cards">
           <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div><h3>Bookings</h3><p>Your upcoming sessions</p><div class="row">Sample session · awaiting confirmation</div></div>
           <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><circle cx="9" cy="9" r="3.5"/><path d="M3 20c.8-3.5 3.2-5 6-5s5.2 1.5 6 5M16 6.5a3 3 0 0 1 0 6M18 15c1.6.6 2.6 2.2 3 5"/></svg></div><h3>Clients</h3><p>Your relationships</p><div class="row">Sample enquiry · reply drafted</div></div>
-          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3l2.4 5.4L20 9l-4.2 3.8L17 19l-5-3-5 3 1.2-6.2L4 9l5.6-.6z"/></svg></div><h3>Offers</h3><p>What you share</p><div class="row">Private sessions · draft</div></div>
-          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 12l4 4 10-10"/></svg></div><h3>Tasks</h3><p>What needs attention</p><div class="row">Review your booking page</div></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M12 3l2.4 5.4L20 9l-4.2 3.8L17 19l-5-3-5 3 1.2-6.2L4 9l5.6-.6z"/></svg></div><h3>Offers</h3><p>What you share</p><div class="row" id="offerRow">Private sessions · idea</div></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 12l4 4 10-10"/></svg></div><h3>Tasks</h3><p>What needs attention</p><div class="row" id="taskRow">Read your diagnostic</div></div>
         </div>
         <div class="companion" id="companion">
           <div class="orb" aria-hidden="true"></div>
-          <div class="t"><small>Your business companion</small><p>Your booking page is ready for review. Would you like to see it?</p></div>
+          <div class="t"><small>Your business companion</small><p id="compMsg">Your business diagnostic is ready.</p></div>
           <div class="cta-row">
-            <button class="btn" id="reviewBtn">Review page</button>
-            <button class="btn gold" id="howBtn">See how it was prepared</button>
+            <button class="btn" id="reviewBtn">Read your report</button>
+            <button class="btn gold" id="howBtn">See how SPARK LAB works</button>
           </div>
         </div>
         <p class="illus">Illustrative interface — not a live client account. "Maya" is a fictional practitioner.</p>
@@ -299,7 +314,7 @@ body.rm[data-view="engine"] #dash{transform:none}
     </div>
 
     <!-- ENGINE -->
-    <div class="layer" id="engine" aria-hidden="true">
+    <div class="layer" id="engine" aria-hidden="true" inert>
       <div class="e-head">
         <div class="e-title">Behind your dashboard: <b>HAMAL</b></div>
         <span class="st proposed" title="The automated agent engine is a proposed future platform">Proposed future platform</span>
@@ -311,55 +326,43 @@ body.rm[data-view="engine"] #dash{transform:none}
         <button class="ebtn" id="backBtn">Return to dashboard</button>
       </div>
       <p class="e-cap" id="cap" aria-live="polite"></p>
-      <div class="today-note">Today: these steps are carried out by the HAMAL team by hand, supported by a few authored assistant skills. The automated agent engine shown here is proposed and not built. The approval and verification rules already apply to that hand-delivered work.</div>
-      <div class="pills" id="pills" role="tablist" aria-label="Task stages"></div>
+      <div class="today-note">What exists today: the diagnostic method, to be delivered by the HAMAL team by hand with a few authored assistant skills; any implementation would also be done by hand. The approval and verification policies will apply to that work, but nothing enforces them in software, and no paid engagements have been delivered yet. The agent engine, the dashboard and the practitioner-side runtime are not built. HAMAL's own internal team tools are not part of the practitioner's system.</div>
+      <div class="pills" id="pills" role="group" aria-label="Journey stages"></div>
       <div class="e-body">
-        <div class="svgwrap"><svg class="e-svg" id="esvg" viewBox="0 0 1110 430" role="img" aria-labelledby="esvgT">
-          <title id="esvgT">One example task travelling through the proposed HAMAL agent engine, with a practitioner approval gate before anything goes live</title>
-          <!-- edges -->
-          <path id="seg0" class="edge draft" d="M138 150 L170 150"/>
-          <path id="seg1a" class="edge draft" d="M298 140 C 318 120,312 95,330 95"/>
-          <path id="seg1b" class="edge draft" d="M298 160 C 318 180,312 205,330 205"/>
-          <path id="seg2a" class="edge draft" d="M458 95 C 476 95,472 140,490 140"/>
-          <path id="seg2b" class="edge draft" d="M458 205 C 476 205,472 160,490 160"/>
-          <path id="seg3" class="edge" d="M618 150 L650 150"/>
-          <path id="seg4" class="edge" d="M778 150 L810 150"/>
-          <path id="seg5" class="edge" d="M938 150 L970 150"/>
-          <!-- reveal threads (draw right to left on entry) -->
-          <g id="threads" aria-hidden="true">
-            <path class="thread" pathLength="1" d="M1034 150 L874 150 L714 150 L554 150 C 470 150,470 95,394 95 C 330 95,300 150,234 150 L74 150"/>
-            <path class="thread" pathLength="1" d="M554 150 C 470 150,470 205,394 205 C 330 205,300 150,234 150"/>
-          </g>
+        <div class="svgwrap"><svg class="e-svg" id="esvg" viewBox="0 0 1210 276" role="group" aria-labelledby="esvgT">
+          <title id="esvgT">The SPARK LAB journey: a human-led business diagnostic, the practitioner's decision, and, only if chosen, an implementation through the proposed HAMAL agent engine with a practitioner approval gate</title>
+          <g id="edges"></g>
+          <g id="threads" aria-hidden="true"></g>
+          <g id="alts" aria-hidden="true"></g>
           <g id="nodes"></g>
-          <g id="handoffs"></g>
+          <g id="handoffs" aria-hidden="true"></g>
           <circle id="pulseA" class="pulse" r="5" cx="74" cy="150" opacity="0"/>
           <circle id="pulseB" class="pulse" r="5" cx="74" cy="150" opacity="0"/>
-          <!-- lower layers -->
-          <g class="lower">
-            <g class="orch is-proposed dim-today">
-              <rect x="20" y="268" width="1070" height="34" rx="10"/>
-              <text x="40" y="290">Orchestrator — coordinates tasks, permissions, approvals and handoffs</text>
-              <text class="eng-only" x="760" y="290" style="fill:#8E8879;font-size:11px">task scope · permission check · action log</text>
+          <g class="lower" aria-hidden="true">
+            <g stroke="rgba(226,200,142,.2)" stroke-dasharray="2 4">
+              <path d="M74 186V290M374 186V290M524 237V290M674 186V290M824 186V290M974 186V290M1124 186V290"/>
+              <path d="M600 324V350M824 324V350"/>
             </g>
-            <g stroke="rgba(226,200,142,.18)" stroke-dasharray="2 4">
-              <path d="M74 186V268M234 186V268M394 237V268M554 186V268M714 186V268M874 186V268M1034 186V268"/>
-              <path d="M714 302V330M900 302V330"/>
+            <g class="orch is-proposed">
+              <rect x="20" y="290" width="1170" height="34" rx="10"/>
+              <text x="40" y="312">Orchestrator — coordinates tasks, permissions, approvals and handoffs · Proposed</text>
+              <text class="eng-only" x="900" y="312" style="fill:#ABA493;font-size:11px">task scope · permission check · action log</text>
             </g>
-            <g class="zone is-notbuilt dim-today">
-              <rect x="20" y="330" width="650" height="84" rx="12"/>
-              <text x="38" y="354">Cloud integrations — the practitioner's own booking, payment and CRM accounts</text>
-              <text class="s" x="38" y="373">Connected only with permission · scoped access · every action logged</text>
-              <g transform="translate(38 384)"><rect width="300" height="22" rx="6" fill="rgba(201,111,90,.18)" stroke="rgba(201,111,90,.6)"/><path d="M10 9v-2a3 3 0 0 1 6 0v2M8.5 9h9v8h-9z" fill="none" stroke="#E7A796" stroke-width="1.2"/><text x="26" y="15" style="fill:#F0C2B5;font-size:11px">Client records stay in the practitioner's systems</text></g>
+            <g class="zone is-notbuilt">
+              <rect x="20" y="350" width="690" height="88" rx="12"/>
+              <text x="38" y="374">Cloud integrations — the practitioner's own booking, payment and CRM accounts · Not built</text>
+              <text class="s" x="38" y="393">Connected only with permission · scoped access · every action logged</text>
+              <g transform="translate(38 404)"><rect width="300" height="22" rx="6" fill="rgba(201,111,90,.18)" stroke="rgba(201,111,90,.6)"/><path d="M10 9v-2a3 3 0 0 1 6 0v2M8.5 9h9v8h-9z" fill="none" stroke="#E7A796" stroke-width="1.2"/><text x="26" y="15" style="fill:#F0C2B5;font-size:11px">Client records stay in the practitioner's systems</text></g>
             </g>
-            <g class="zone local is-notbuilt dim-today">
-              <rect x="690" y="330" width="400" height="84" rx="12"/>
-              <text x="708" y="354">Local device runtime — optional</text>
-              <text class="s" x="708" y="373">Runs on the practitioner's laptop, only with tools they authorize</text>
-              <text class="s" x="708" y="391">Pauses at a permission checkpoint before acting</text>
+            <g class="zone local is-notbuilt">
+              <rect x="730" y="350" width="460" height="88" rx="12"/>
+              <text x="748" y="374">Practitioner-side local runtime — concept · Not built</text>
+              <text class="s" x="748" y="393">Would run on the practitioner's own computer, only with tools they authorize</text>
+              <text class="s" x="748" y="411">Separate from HAMAL's own internal team tooling</text>
             </g>
           </g>
         </svg></div>
-        <aside class="panel" id="panel" aria-live="polite"></aside>
+        <aside class="panel" id="panel" aria-label="Selected stage details"></aside>
       </div>
     </div>
   </section>
@@ -369,7 +372,7 @@ body.rm[data-view="engine"] #dash{transform:none}
   <section class="sec" id="sec-diag">
     <div class="sec-head"><div><h2>Where it starts: the business diagnostic</h2>
       <p class="lead" id="diagLead">A human-led review of how people find, book and return to you, using 18 candidate business checks across four areas.</p></div>
-      <div><span class="st today">Exists today · candidate checklist V0.1</span></div></div>
+      <div class="st-row"><span class="st today">Exists today · human-led method</span><span class="st proposed">Checklist V0.1 · candidate, being finalised</span></div></div>
     <div class="grid4" id="checks"></div>
     <div class="hc is-inactive dim-today">
       <div class="sec-head"><h3 style="margin:0 0 8px;font-size:14px">Human Context — four dimensions</h3><span class="st inactive">Inactive · optional · unscored</span></div>
@@ -383,7 +386,7 @@ body.rm[data-view="engine"] #dash{transform:none}
   </section>
 
   <section class="sec" id="sec-out">
-    <div class="sec-head"><div><h2>Four equal outcomes</h2><p class="lead">The practitioner chooses what happens next. No automatic upsell, and nobody needs an expensive build to benefit.</p></div><span class="st approved">Approved approach</span></div>
+    <div class="sec-head"><div><h2>Four equal outcomes</h2><p class="lead">The practitioner chooses what happens next. No automatic upsell, and nobody needs an expensive build to benefit.</p></div><span class="st approved">Approved policy</span></div>
     <div class="outcomes">
       <div class="oc"><h3>Self-serve</h3><p>You fix it yourself with clear instructions.</p></div>
       <div class="oc"><h3>Implementation</h3><p>HAMAL builds the approved fix, scoped in writing first.</p></div>
@@ -399,12 +402,12 @@ body.rm[data-view="engine"] #dash{transform:none}
         <div class="sec-head"><h3>Local versus cloud</h3><span class="st notbuilt">Not built</span></div>
         <div class="lanes">
           <div class="lane"><b>Cloud</b><br>The practitioner's own booking, payment and CRM accounts, connected with permission.</div>
-          <div class="lane local"><b>Local device</b><br>An optional runtime on their own computer. Only authorized tools; a checkpoint before every action.</div>
+          <div class="lane local"><b>Practitioner's own device</b><br>A concept for an optional runtime on their computer: only authorized tools, a checkpoint before every action. Separate from HAMAL's internal team tooling.</div>
         </div>
         <p class="eng-only" style="font-size:12.5px;color:var(--ink-3);margin:10px 0 0">Engineering: no unrestricted device access; scoped credentials per integration; action log per task; consequential actions require recorded approval.</p>
       </div>
       <div class="box">
-        <div class="sec-head"><h3>Private versus shared knowledge</h3><span class="st approved">Approved principle · store design proposed</span></div>
+        <div class="sec-head"><h3>Private versus shared knowledge</h3><span class="st approved">Approved policy · store design proposed</span></div>
         <div class="flow">
           <span class="chip private">Client-private: answers, reports, notes, access</span>
           <span class="wall" aria-hidden="true"></span>
@@ -426,11 +429,19 @@ body.rm[data-view="engine"] #dash{transform:none}
       <span class="arrow" style="font-size:20px">·</span>
       <div class="ring muted"><svg viewBox="0 0 76 76"><circle class="bg" cx="38" cy="38" r="32"/><circle class="fg" cx="38" cy="38" r="32"/></svg>Not used → lesson logged</div>
       <button class="btn" id="ringBtn">Play example</button>
+      <span style="font-size:12.5px;color:var(--ink-3)">Example animation, no data.</span>
     </div>
   </section>
 
   <section class="sec is-proposed dim-today" id="sec-school">
-    <div class="sec-head"><div><h2>For training schools</h2><p class="lead">A school can offer business support after certification. Each graduate gets an independent workspace; HAMAL provides the implementation behind the scenes.</p></div><span class="st proposed">Potential partnership model · no agreements exist</span></div>
+    <div class="sec-head"><div><h2>For training schools</h2><p class="lead">SPARK LAB could become the bridge between certification and running a sustainable independent practice. The school offers the support; HAMAL provides the delivery behind the scenes. This is a proposed model: no school agreements exist and no results have been measured.</p></div><span class="st proposed">Potential partnership model · no agreements exist</span></div>
+    <ol class="gjourney">
+      <li><b>The gap after certification</b>Graduates can teach, but few were shown how enquiries, bookings and follow-up work.</li>
+      <li><b>An optional next step</b>Each interested graduate gets a human-led business diagnostic.</li>
+      <li><b>The graduate decides</b>Self-serve, implementation, referral or no action. The school never chooses.</li>
+      <li><b>Owned, not rented</b>Anything built lives in the graduate's own accounts, tested with their own enquiry.</li>
+      <li><b>What the school sees</b>Participation only: enrolled, diagnostic done, outcome chosen. Never client records.</li>
+    </ol>
     <div class="schoolviz">
       <div class="school">Example training school</div>
       <span class="arrow" style="font-size:22px">→</span>
@@ -439,7 +450,7 @@ body.rm[data-view="engine"] #dash{transform:none}
         <div class="ws"><b>Graduate D</b>Own workspace</div><div class="ws"><b>Graduate E</b>Own workspace</div><div class="ws"><b>Graduate F</b>Own workspace</div>
       </div>
     </div>
-    <p style="font-size:13px;color:var(--ink-2);margin:12px 0 0">The school sees program participation, never a graduate's client records. Illustrative names and structure.</p>
+    <p style="font-size:13px;color:var(--ink-2);margin:12px 0 0">Illustrative names and structure.</p>
   </section>
 
   <section class="sec" id="sec-legend">
@@ -447,21 +458,22 @@ body.rm[data-view="engine"] #dash{transform:none}
     <p class="lead">Every element on this page carries one of these labels.</p>
     <div class="legend">
       <div class="lg"><span class="st today">Exists today</span><p style="margin:6px 0 0">Real and usable now.</p></div>
-      <div class="lg"><span class="st approved">Approved</span><p style="margin:6px 0 0">Decided direction or principle; tooling may not exist yet.</p></div>
+      <div class="lg"><span class="st approved">Approved policy</span><p style="margin:6px 0 0">A founder-approved operating rule. Approved is not built: automated enforcement may not exist.</p></div>
       <div class="lg"><span class="st proposed">Proposed</span><p style="margin:6px 0 0">Designed concept, not decided or built.</p></div>
       <div class="lg"><span class="st inactive">Inactive</span><p style="margin:6px 0 0">Drafted, switched off, collects nothing.</p></div>
       <div class="lg"><span class="st notbuilt">Not built</span><p style="margin:6px 0 0">Future capability shown for explanation.</p></div>
     </div>
     <ul class="today-list">
-      <li><b>Exists today:</b> the diagnostic method (human-led), the 18-check candidate list, a reusable intake structure, and a few proven building blocks (single enquiry routing, regression tests that block fake confirmations).</li>
-      <li><b>Not yet:</b> no paid diagnostics delivered, no measured results, no live dashboard, no automated agent engine, no local runtime.</li>
+      <li><b>Exists today:</b> the human-led diagnostic method, a candidate 18-check list still being finalised, three source intake schemas not yet merged into one, and a few proven building blocks (single enquiry routing, regression tests that block fake confirmations).</li>
+      <li><b>Approved policy, enforced by people:</b> four equal outcomes, practitioner approval before anything goes live, end-to-end verification, one-way private-to-shared learning.</li>
+      <li><b>Not yet:</b> no paid diagnostics delivered, no measured results, no live dashboard, no automated agent engine, no automated approval or verification, no practitioner-side runtime, no school agreements.</li>
     </ul>
   </section>
 </div>
 
 <footer class="foot">
   <p class="p">The practitioner sees simplicity. HAMAL handles the complexity. The practitioner retains control.</p>
-  <small>SPARK LAB — Powered by HAMAL (Hanzo, Art Mob AGInts, Lux). Concept demonstration: illustrative interface, fictional names, no client data, no performance claims.</small>
+  <small>SPARK LAB — Powered by HAMAL (Hanzo, Art Mob AGInts, Lux), the proposed delivery engine. Concept demonstration: illustrative interface, fictional names, no client data, no performance claims.</small>
 </footer>
 </main>
 
@@ -473,81 +485,109 @@ let reduced=RMQ.matches; if(reduced) B.classList.add('rm');
 
 const MODEQ={practitioner:'What can SPARK LAB do for my business?',school:'How can we support graduates after certification?',eng:'How do agents, integrations, approvals and private data work?'};
 
-/* node geometry: x center, y center, h */
+/* node geometry: x center, y center, h; st = node badge status */
 const NODES=[
- {id:0,x:74,y:150,h:72,st:'proposed'},
- {id:1,x:234,y:150,h:72,st:'proposed'},
- {id:2,x:394,y:95,h:64,st:'proposed'},
- {id:3,x:394,y:205,h:64,st:'proposed'},
- {id:4,x:554,y:150,h:72,st:'approved',gate:true},
- {id:5,x:714,y:150,h:72,st:'notbuilt'},
- {id:6,x:874,y:150,h:72,st:'approved'},
- {id:7,x:1034,y:150,h:72,st:'notbuilt'}
+ {id:0,x:74,y:150,h:72,st:'today',human:true},
+ {id:1,x:224,y:150,h:72,st:'approved',gate:true},
+ {id:2,x:374,y:150,h:72,st:'proposed'},
+ {id:3,x:524,y:95,h:64,st:'proposed'},
+ {id:4,x:524,y:205,h:64,st:'proposed'},
+ {id:5,x:674,y:150,h:72,st:'approved',gate:true},
+ {id:6,x:824,y:150,h:72,st:'notbuilt'},
+ {id:7,x:974,y:150,h:72,st:'approved'},
+ {id:8,x:1124,y:150,h:72,st:'notbuilt'}
 ];
-const LABELS={
- practitioner:[['Your request','in your own words'],['Shape the offer','who, what, how'],['Draft the page','words + images'],['Draft the booking','flow + follow-up'],['You approve','you stay in control'],['Go live','in your accounts'],['Check it works','a test enquiry'],['Back to you','ready for review']],
- school:[['Graduate request','their own words'],['Shape the offer','who, what, how'],['Draft the page','words + images'],['Draft the booking','flow + follow-up'],['Graduate approves','they stay in control'],['Go live','their own accounts'],['Check it works','a test enquiry'],['Back to them','ready for review']],
- eng:[['Intake event','task opened'],['Business Architect','offer + journey'],['Creative Studio','page, copy, assets'],['Systems Engineer','booking, CRM config'],['Approval gate','recorded consent'],['Authorized run','scoped actions'],['Verification','test enquiry · BI'],['Dashboard return','result + log']]
+const EDGES={
+ seg0:{d:'M138 150 L160 150'},
+ seg1:{d:'M288 150 L310 150',draft:1},
+ seg2a:{d:'M438 140 C 452 120,446 95,460 95',draft:1},
+ seg2b:{d:'M438 160 C 452 180,446 205,460 205',draft:1},
+ seg3a:{d:'M588 95 C 602 95,596 140,610 140',draft:1},
+ seg3b:{d:'M588 205 C 602 205,596 160,610 160',draft:1},
+ seg4:{d:'M738 150 L760 150'},
+ seg5:{d:'M888 150 L910 150'},
+ seg6:{d:'M1038 150 L1060 150'}
 };
-const STL={today:'EXISTS TODAY',approved:'APPROVED',proposed:'PROPOSED',inactive:'INACTIVE',notbuilt:'NOT BUILT'};
+const LABELS={
+ practitioner:[['Diagnostic','human-led review'],['Your decision','four equal options'],['Shape the offer','who, what, how'],['Draft the page','words + images'],['Draft the booking','flow + follow-up'],['You approve','you stay in control'],['Go live','in your accounts'],['Check it works','a test enquiry'],['Back to you','ready for review']],
+ school:[['Diagnostic','after certification'],['Graduate decides','four equal options'],['Shape the offer','who, what, how'],['Draft the page','words + images'],['Draft the booking','flow + follow-up'],['Graduate approves','they stay in control'],['Go live','their own accounts'],['Check it works','a test enquiry'],['Back to them','ready for review']],
+ eng:[['Diagnostic','STB · 18 checks'],['Decision','route each finding'],['Business Architect','offer + journey'],['Creative Studio','page, copy, assets'],['Systems Engineer','booking, CRM config'],['Approval gate','human sign-off'],['Authorized run','scoped actions'],['Verification','test enquiry · BI'],['Dashboard return','result + log']]
+};
+const STL={today:'EXISTS TODAY · HUMAN-LED',approved:'APPROVED POLICY',proposed:'PROPOSED',inactive:'INACTIVE',notbuilt:'NOT BUILT'};
+const STN={today:'Exists today',approved:'Approved policy',proposed:'Proposed',inactive:'Inactive',notbuilt:'Not built'};
 
-/* stages: which nodes light, which segments animate in */
+/* stages: which nodes light, which edges a pulse travels into the stage */
 const STAGES=[
- {name:'Request',nodes:[0],segs:[],ho:null},
- {name:'Architect',nodes:[1],segs:['seg0'],ho:{x:154,y:78,t:'Request + intake'}},
- {name:'Prepare',nodes:[2,3],segs:['seg1a','seg1b'],ho:{x:314,y:28,t:'Offer outline (draft)'}},
- {name:'Approve',nodes:[4],segs:['seg2a','seg2b'],ho:{x:474,y:28,t:'Drafts for review'}},
- {name:'Execute',nodes:[5],segs:['seg3'],ho:{x:634,y:78,t:'Approved plan'}},
- {name:'Verify',nodes:[6],segs:['seg4'],ho:{x:794,y:78,t:'Live changes'}},
- {name:'Return',nodes:[7],segs:['seg5'],ho:{x:954,y:78,t:'Verified result'}}
+ {name:'Diagnostic',nodes:[0],segs:[],ho:null},
+ {name:'Decision',nodes:[1],segs:['seg0'],ho:{x:149,y:78,t:'Report + top fix'}},
+ {name:'Architect',nodes:[2],segs:['seg1'],ho:{x:299,y:78,t:'Implementation chosen'}},
+ {name:'Prepare',nodes:[3,4],segs:['seg2a','seg2b'],ho:{x:449,y:28,t:'Offer outline (draft)'}},
+ {name:'Approve',nodes:[5],segs:['seg3a','seg3b'],ho:{x:599,y:28,t:'Drafts for review'}},
+ {name:'Execute',nodes:[6],segs:['seg4'],ho:{x:749,y:78,t:'Approved plan'}},
+ {name:'Verify',nodes:[7],segs:['seg5'],ho:{x:899,y:78,t:'Live changes'}},
+ {name:'Return',nodes:[8],segs:['seg6'],ho:{x:1049,y:78,t:'Verified result'}}
 ];
+const P_APPROVE=[['approved','Your approval required · Approved policy'],['notbuilt','Automated approval gate · Not built']];
+const P_VERIFY=[['approved','End-to-end check required · Approved policy'],['notbuilt','Automated verification records · Not built']];
 const T={
  practitioner:[
-  {h:'You ask, in your own words',w:'"Help me launch private sessions." No forms to decode, no tools to learn.',a:'Your business companion',o:'Your request',c:'You decide what to ask for.',r:'SPARK LAB front door',s:'notbuilt'},
-  {h:'The offer takes shape',w:'Who private sessions are for, how long they run, what they cost to book, what happens before and after.',a:'Business Architect',o:'An offer outline, as a draft',c:'It stays a draft until you approve.',r:'HAMAL',s:'proposed'},
-  {h:'Drafts are prepared together',w:'One specialist drafts the offer page and welcome message. Another prepares the booking flow and follow-up. Nothing is live yet.',a:'Creative Studio · Systems Engineer',o:'Page, booking flow and follow-up, all drafts',c:'Drafts only. Nothing is sent or published.',r:'HAMAL',s:'proposed'},
-  {h:'You approve, or you don’t',w:'You review everything. Change it, approve it, or say "not now". Nothing consequential goes live without your authorization.',a:'You',o:'Your decision',c:'This is the control point. You can stop here.',r:'Your dashboard',s:'approved'},
-  {h:'Only then does it go live',w:'With your approval, the page is published and the booking flow is switched on in your own accounts.',a:'Systems Engineer · Client Operations',o:'Live page and booking flow',c:'Only the actions you approved, in tools you connected.',r:'Your own accounts',s:'notbuilt'},
-  {h:'Checked end to end',w:'A test enquiry travels your whole booking path and lands in your own client list, so you see it work. A booking only shows as confirmed when your booking system confirms it.',a:'Business Intelligence',o:'A verified test enquiry',c:'You witness the test.',r:'Your own accounts',s:'approved'},
-  {h:'Back on your dashboard',w:'"Your booking page is ready for review." The simple screen you started from, with the work done behind it.',a:'Your business companion',o:'A result you can see',c:'You choose what happens next.',r:'Your dashboard',s:'notbuilt'}
+  {h:'It starts with a business diagnostic',w:'A person on the HAMAL team reviews how people find, book and come back to you, using 18 business checks. You get a short written report.',a:'HAMAL team (human-led)',o:'Your diagnostic report',c:'You see every finding before anything else happens.',r:'Delivered by people today',st:[['today','Exists today · human-led']]},
+  {h:'You choose what happens next',w:'The report names the most important fix: people struggle to find your booking link. You choose one of four equal options: fix it yourself, ask HAMAL to implement it, get a referral, or do nothing.',a:'You',o:'Your choice',c:'No option is pushed. "No action" is a valid result.',r:'Your dashboard',st:[['approved','Four equal outcomes · Approved policy']]},
+  {h:'In this example, you chose implementation',w:'"Help me launch private sessions with a booking page people can find." The offer takes shape: who it is for, how long sessions run, how people book, what happens before and after.',a:'Business Architect',o:'An offer outline, as a draft',c:'It stays a draft until you approve.',r:'HAMAL',st:[['proposed','Proposed']]},
+  {h:'Drafts are prepared together',w:'One specialist drafts the offer page and welcome message. Another prepares the booking flow and follow-up. Nothing is live yet.',a:'Creative Studio · Systems Engineer',o:'Page, booking flow and follow-up, all drafts',c:'Drafts only. Nothing is sent or published.',r:'HAMAL',st:[['proposed','Proposed']]},
+  {h:'You approve, or you don’t',w:'You review everything. Change it, approve it, or say "not now". Nothing consequential goes live without your authorization.',a:'You',o:'Your decision',c:'This is the control point. You can stop here.',r:'Your dashboard',st:P_APPROVE},
+  {h:'Only then does it go live',w:'With your approval, the page is published and the booking flow is switched on in your own accounts.',a:'Systems Engineer · Client Operations',o:'Live page and booking flow',c:'Only the actions you approved, in tools you connected.',r:'Your own accounts',st:[['notbuilt','Not built']]},
+  {h:'Checked end to end',w:'A test enquiry travels your whole booking path and lands in your own client list, so you see it work. A booking only shows as confirmed when your booking system confirms it.',a:'Today: the HAMAL team, witnessed by you. Future: Business Intelligence agent',o:'A verified test enquiry',c:'You witness the test.',r:'Your own accounts',st:P_VERIFY},
+  {h:'Back on your dashboard',w:'"Your booking page is ready for review." The same simple screen, with the work done behind it.',a:'Your business companion',o:'A result you can see',c:'You choose what happens next.',r:'Your dashboard',st:[['notbuilt','Not built']]}
  ],
  school:[
-  {h:'A graduate asks for help',w:'A newly certified teacher asks to launch their first paid offer, in plain language.',a:'Their business companion',o:'Their request',c:'The graduate decides what to ask for.',r:'Their own SPARK LAB workspace',s:'notbuilt'},
-  {h:'The offer takes shape',w:'Their offer is structured around their teaching, not a generic template.',a:'Business Architect',o:'An offer outline, as a draft',c:'Draft until the graduate approves.',r:'HAMAL',s:'proposed'},
-  {h:'Drafts are prepared',w:'Page, booking flow and follow-up are drafted by specialists working together.',a:'Creative Studio · Systems Engineer',o:'Drafts',c:'Nothing goes live yet.',r:'HAMAL',s:'proposed'},
-  {h:'The graduate approves',w:'Every graduate stays in control of their own business. The school never approves on their behalf.',a:'The graduate',o:'Their decision',c:'The control point belongs to the practitioner.',r:'Their dashboard',s:'approved'},
-  {h:'It goes live in their accounts',w:'Approved work is switched on in the graduate’s own tools, so they own what is built.',a:'Systems Engineer · Client Operations',o:'Live page and booking flow',c:'Only approved actions.',r:'The graduate’s accounts',s:'notbuilt'},
-  {h:'Checked end to end',w:'A test enquiry proves the path works before the graduate relies on it.',a:'Business Intelligence',o:'A verified test enquiry',c:'The graduate witnesses it.',r:'The graduate’s accounts',s:'approved'},
-  {h:'Support after certification',w:'Your school offers business support without building a tech team. HAMAL provides the implementation behind the scenes.',a:'HAMAL, for your graduates',o:'A working system each graduate owns',c:'The school sees participation, not client records.',r:'Graduate workspaces',s:'proposed'}
+  {h:'Every graduate starts with a diagnostic',w:'After certification, a graduate gets a human-led review of how clients find, book and return to them, and a short written report.',a:'HAMAL team (human-led)',o:'A written report',c:'The graduate sees every finding.',r:'Delivered by people today',st:[['today','Exists today · human-led']]},
+  {h:'The graduate decides',w:'Four equal options. Many graduates may only need to fix one thing themselves.',a:'The graduate',o:'Their choice',c:'The school never chooses for them.',r:'Their own workspace',st:[['approved','Four equal outcomes · Approved policy']]},
+  {h:'If they choose implementation',w:'Their offer is shaped around their own teaching, not a generic template.',a:'Business Architect',o:'An offer outline, as a draft',c:'Draft until the graduate approves.',r:'HAMAL',st:[['proposed','Proposed']]},
+  {h:'Drafts are prepared',w:'Page, booking flow and follow-up are drafted by specialists working together.',a:'Creative Studio · Systems Engineer',o:'Drafts',c:'Nothing goes live yet.',r:'HAMAL',st:[['proposed','Proposed']]},
+  {h:'The graduate approves',w:'Every graduate stays in control of their own business. The school never approves on their behalf.',a:'The graduate',o:'Their decision',c:'The control point belongs to the practitioner.',r:'Their dashboard',st:[['approved','Graduate approval required · Approved policy'],['notbuilt','Automated approval gate · Not built']]},
+  {h:'It goes live in their accounts',w:'Approved work is switched on in the graduate’s own tools, so they own what is built.',a:'Systems Engineer · Client Operations',o:'Live page and booking flow',c:'Only approved actions.',r:'The graduate’s accounts',st:[['notbuilt','Not built']]},
+  {h:'Checked end to end',w:'A test enquiry proves the path works before the graduate relies on it.',a:'Today: the HAMAL team, witnessed by the graduate. Future: Business Intelligence agent',o:'A verified test enquiry',c:'The graduate witnesses it.',r:'The graduate’s accounts',st:P_VERIFY},
+  {h:'Support after certification',w:'Your school could offer business support without building a tech team. HAMAL would provide the delivery behind the scenes.',a:'HAMAL, for your graduates',o:'A working system each graduate owns',c:'The school sees participation, not client records.',r:'Graduate workspaces',st:[['proposed','Potential partnership model · Proposed']]}
  ],
  eng:[
-  {h:'Intake event',w:'Front-door request creates a task. Orchestrator sets scope, required permissions and approval policy.',a:'Orchestrator',o:'Task record (scope, permissions)',c:'No action permissions granted at this stage.',r:'Cloud · HAMAL',s:'proposed'},
-  {h:'Business Architect',w:'Drafts offer structure and client journey from intake and diagnostic findings (e.g. C1–C4, A3).',a:'Business Architect',o:'Offer spec (draft artifact)',c:'Draft state; not executable.',r:'Cloud · HAMAL',s:'proposed'},
-  {h:'Parallel drafting',w:'Creative Studio drafts page copy and assets. Systems Engineer stages booking, CRM and follow-up configuration without applying it.',a:'Creative Studio · Systems Engineer',o:'Page draft · staged integration config',c:'Staged only. Dotted edges = drafts.',r:'Cloud · HAMAL',s:'proposed'},
-  {h:'Approval gate',w:'Consequential actions (publish, send, payment, booking changes) are blocked until practitioner approval is recorded against the task.',a:'Practitioner (human decision)',o:'Signed approval on the task',c:'Hard gate. Principle approved; tooling not built.',r:'SPARK LAB dashboard',s:'approved'},
-  {h:'Authorized execution',w:'Approved actions run against practitioner-owned integrations with scoped credentials, or via the optional local runtime. Every action logged. Solid edges = authorized.',a:'Systems Engineer · Client Operations',o:'Applied config · action log',c:'Only actions listed in the approval.',r:'Cloud integrations · optional local runtime',s:'notbuilt'},
-  {h:'Verification',w:'End-to-end test enquiry must arrive in the practitioner’s CRM, witnessed. Booking state shown as confirmed only on booking-system confirmation.',a:'Business Intelligence',o:'Verification record',c:'Definition of done, not a dashboard claim.',r:'Practitioner’s own systems',s:'approved'},
-  {h:'Dashboard return + adoption',w:'Result and action log returned to the dashboard. Tracking begins: built → activated → in use at 30 days. Sanitized lessons cross to the shared library.',a:'Orchestrator · Business Intelligence',o:'Adoption record · sanitized lesson',c:'Private data stays on the private side.',r:'Cloud · private store (proposed)',s:'notbuilt'}
+  {h:'Business diagnostic (STB method)',w:'Human-led review against 18 candidate checks (A1–A5, B1–B5, C1–C4, E1–E4). Findings severity-ranked, one bottleneck named. Human Context is excluded unless separately consented, and is inactive.',a:'HAMAL team; authored assistant skills help draft',o:'Diagnostic report with routed findings',c:'Founder edits and signs off.',r:'Human delivery today · no platform',st:[['today','Method exists · human-led'],['notbuilt','Automated scoring · Not built']]},
+  {h:'Practitioner decision',w:'Each finding routes to self_serve, sprint (implementation), refer_out or no_action. Only an explicit implementation choice opens a build task.',a:'Practitioner (human decision)',o:'Decision record → Orchestrator opens task',c:'No build task exists without this decision.',r:'SPARK LAB dashboard (not built)',st:[['approved','Routing rule · Approved policy'],['notbuilt','Decision capture UI · Not built']]},
+  {h:'Business Architect',w:'Drafts offer structure and client journey from the diagnostic findings (e.g. A2, C1–C4).',a:'Business Architect',o:'Offer spec (draft artifact)',c:'Draft state; not executable.',r:'Cloud · HAMAL',st:[['proposed','Proposed']]},
+  {h:'Parallel drafting',w:'Creative Studio drafts page copy and assets. Systems Engineer stages booking, CRM and follow-up configuration without applying it.',a:'Creative Studio · Systems Engineer',o:'Page draft · staged integration config',c:'Staged only. Dotted edges = drafts.',r:'Cloud · HAMAL',st:[['proposed','Proposed']]},
+  {h:'Approval gate',w:'Consequential actions (publish, send, payment, booking changes) stay blocked until practitioner approval is recorded against the task.',a:'Practitioner (human decision)',o:'Approval recorded on the task',c:'Today a human checks for approval; nothing enforces it in software.',r:'SPARK LAB dashboard (not built)',st:[['approved','Human approval required · Approved policy'],['notbuilt','Automated approval gate · Not built']]},
+  {h:'Authorized execution',w:'Approved actions run against practitioner-owned integrations with scoped credentials, or via an optional practitioner-side local runtime. That runtime is a concept, separate from HAMAL’s internal team tooling. Every action logged. Solid edges = authorized.',a:'Systems Engineer · Client Operations',o:'Applied config · action log',c:'Only actions listed in the approval.',r:'Cloud integrations · local runtime (concept)',st:[['notbuilt','Not built']]},
+  {h:'Verification',w:'An end-to-end test enquiry must arrive in the practitioner’s CRM, witnessed. Booking state shows as confirmed only on booking-system confirmation.',a:'Business Intelligence',o:'Verification record',c:'Definition of done, not a dashboard claim.',r:'Practitioner’s own systems',st:[['approved','End-to-end verification required · Approved policy'],['notbuilt','Automated verification records · Not built']]},
+  {h:'Dashboard return + adoption',w:'Result and action log return to the dashboard. Tracking begins: built → activated → in use at 30 days. Sanitized lessons cross to the shared library.',a:'Orchestrator · Business Intelligence',o:'Adoption record · sanitized lesson',c:'Private data stays on the private side.',r:'Cloud · private store (proposed)',st:[['proposed','Adoption tracking model · Proposed'],['notbuilt','Dashboard and return · Not built']]}
  ]
 };
 
-/* build nodes */
-const nodesG=$('#nodes'), NS='http://www.w3.org/2000/svg';
+/* build edges, threads, alternatives and nodes */
+const NS='http://www.w3.org/2000/svg';
 function el(n,a,p){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+const edgesG=$('#edges');
+for(const id in EDGES)el('path',{id,class:'edge'+(EDGES[id].draft?' draft':''),d:EDGES[id].d},edgesG);
+const thG=$('#threads');
+el('path',{class:'thread',pathLength:1,d:'M74 150 L374 150 C 450 150,450 95,524 95 C 598 95,598 150,674 150 L1124 150'},thG);
+el('path',{class:'thread',pathLength:1,d:'M374 150 C 450 150,450 205,524 205 C 598 205,598 150,674 150'},thG);
+const altG=$('#alts');el('path',{d:'M224 186V196',class:'edge draft'},altG);
+['or: Self-serve','or: Referral','or: No action'].forEach((t,i)=>{const g=el('g',{class:'alt'},altG);el('rect',{x:170,y:196+i*26,width:108,height:20,rx:6},g);el('text',{x:224,y:210+i*26,'text-anchor':'middle'},g).textContent=t});
+const nodesG=$('#nodes');
 NODES.forEach(n=>{
-  const g=el('g',{class:'n'+(n.gate?' gate':'')+' is-'+n.st+' dim-today','data-node':n.id,tabindex:0,role:'button'},nodesG);
+  const g=el('g',{class:'n'+(n.gate?' gate':'')+(n.human?' human':'')+' is-'+n.st,'data-node':n.id,tabindex:0,role:'button'},nodesG);
   el('rect',{x:n.x-64,y:n.y-n.h/2,width:128,height:n.h,rx:12},g);
   if(n.gate){const ic=el('g',{transform:`translate(${n.x-8} ${n.y-n.h/2+8})`},g);el('path',{d:'M3 9V4.5a1.3 1.3 0 0 1 2.6 0V8M5.6 8V3a1.3 1.3 0 0 1 2.6 0v5M8.2 8V3.8a1.3 1.3 0 0 1 2.6 0V9M10.8 9V6a1.3 1.3 0 0 1 2.6 0v4c0 3-2 5-5 5H8c-2 0-3-1-4-2.5L2 9.5a1.2 1.2 0 0 1 2-1.3L5 9.5',fill:'none',stroke:'#7FD1B3','stroke-width':1.1},ic)}
   el('text',{class:'t1',x:n.x,y:n.y+(n.gate?6:-2),'text-anchor':'middle'},g);
   el('text',{class:'sub',x:n.x,y:n.y+(n.gate?20:14),'text-anchor':'middle'},g);
-  el('text',{class:'badge eng-only',x:n.x,y:n.y-n.h/2-6,'text-anchor':'middle'},g).textContent=STL[n.st];
+  el('text',{class:'badge',x:n.x,y:n.y-n.h/2-6,'text-anchor':'middle'},g).textContent=STL[n.st];
   g.addEventListener('click',()=>goStage(stageOfNode(n.id),true));
   g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();goStage(stageOfNode(n.id),true)}});
 });
 function stageOfNode(id){return STAGES.findIndex(s=>s.nodes.includes(id))}
 function paintLabels(){
   const L=LABELS[B.dataset.mode];
-  $$('#nodes .n').forEach(g=>{const i=+g.dataset.node;g.querySelector('.t1').textContent=L[i][0];g.querySelector('.sub').textContent=L[i][1]});
+  $$('#nodes .n').forEach(g=>{const i=+g.dataset.node;g.querySelector('.t1').textContent=L[i][0];g.querySelector('.sub').textContent=L[i][1];
+    g.setAttribute('aria-label',`${L[i][0]}, ${L[i][1]}. Status: ${STN[NODES[i].st]}`)});
 }
 /* handoff pill */
 const hoG=$('#handoffs'), ho=el('g',{class:'handoff'},hoG), hoR=el('rect',{rx:8,height:22},ho), hoT=el('text',{},ho);
@@ -560,79 +600,97 @@ function showHandoff(h){
 }
 /* stage pills */
 const pills=$('#pills');
-STAGES.forEach((s,i)=>{const b=document.createElement('button');b.className='pill';b.role='tab';b.textContent=(i+1)+' · '+s.name;b.onclick=()=>goStage(i,true);pills.appendChild(b)});
+STAGES.forEach((s,i)=>{const b=document.createElement('button');b.className='pill';b.type='button';b.textContent=(i+1)+' · '+s.name;b.setAttribute('aria-label',`Stage ${i+1}: ${s.name}`);b.onclick=()=>goStage(i,true);pills.appendChild(b)});
 
-/* stage engine */
-let stage=0, playing=false, timer=null, raf=null, intro=[];
+/* stage engine: every goStage invalidates earlier animations via a token */
+let stage=0, playing=false, timer=null, intro=[], animTok=0, visitedEnd=false;
 function clearIntro(){intro.forEach(clearTimeout);intro=[]}
-function animSeg(id,pulse,done){
+function animSeg(id,pulse,tok,done){
   const p=document.getElementById(id), L=p.getTotalLength();
   if(reduced){const e=p.getPointAtLength(L);pulse.setAttribute('cx',e.x);pulse.setAttribute('cy',e.y);pulse.setAttribute('opacity',1);done&&done();return}
   const t0=performance.now(),D=900;pulse.setAttribute('opacity',1);
-  (function f(t){const u=Math.min(1,(t-t0)/D),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,q=p.getPointAtLength(e*L);
+  (function f(t){if(tok!==animTok)return;const u=Math.min(1,(t-t0)/D),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,q=p.getPointAtLength(e*L);
     pulse.setAttribute('cx',q.x);pulse.setAttribute('cy',q.y);if(u<1)requestAnimationFrame(f);else done&&done()})(t0);
 }
 function goStage(i,user){
-  stage=(i+STAGES.length)%STAGES.length;const s=STAGES[stage];
+  const n=STAGES.length;stage=((Math.trunc(+i)||0)%n+n)%n;const s=STAGES[stage];const tok=++animTok;
   if(user){clearIntro();if(playing)togglePlay(false)}
-  $$('#nodes .n').forEach(g=>{const id=+g.dataset.node;g.classList.remove('on');
-    const firstStage=stageOfNode(id);g.classList.toggle('done',firstStage<stage)});
+  if(stage===n-1)visitedEnd=true;
+  $$('#nodes .n').forEach(g=>{const id=+g.dataset.node;g.classList.remove('on');g.classList.toggle('done',stageOfNode(id)<stage)});
   $$('.edge').forEach(e=>e.classList.remove('lit'));
   STAGES.slice(1,stage+1).forEach(st=>st.segs.forEach(id=>document.getElementById(id).classList.add('lit')));
-  const pa=$('#pulseA'),pb=$('#pulseB');pb.setAttribute('opacity',0);
-  const light=()=>s.nodes.forEach(id=>$(`#nodes .n[data-node="${id}"]`).classList.add('on'));
-  if(s.segs.length){animSeg(s.segs[0],pa,light);if(s.segs[1])animSeg(s.segs[1],pb)}
-  else{const n=NODES[s.nodes[0]];pa.setAttribute('cx',n.x);pa.setAttribute('cy',n.y-n.h/2-0);pa.setAttribute('opacity',0);light()}
+  $('#alts').classList.toggle('on',stage===1);
+  const pa=$('#pulseA'),pb=$('#pulseB');pb.setAttribute('opacity',0);pa.setAttribute('opacity',0);
+  const light=()=>{if(tok===animTok)s.nodes.forEach(id=>$(`#nodes .n[data-node="${id}"]`).classList.add('on'))};
+  if(s.segs.length){animSeg(s.segs[0],pa,tok,light);if(s.segs[1])animSeg(s.segs[1],pb,tok)}
+  else light();
   showHandoff(s.ho);
-  [...pills.children].forEach((b,j)=>b.setAttribute('aria-current',j===stage));
+  [...pills.children].forEach((b,j)=>b.setAttribute('aria-pressed',j===stage));
   paintPanel();
   $('#cap').textContent=captionFor(stage);
 }
 function captionFor(i){
   const m=B.dataset.mode;
-  if(i===4) return m==='eng'?'Hard gate: nothing consequential executes without recorded approval.':'Nothing goes live without your yes.';
-  if(i===6) return m==='school'?'Each graduate owns a working system. Your school offers the support.':'The work happened behind the glass. You stayed in control.';
-  if(i===0) return m==='eng'?'One example task, end to end.':'One request. Watch where it goes.';
+  if(i===0) return m==='eng'?'Entry point: a human-led diagnostic. Everything after it is optional.':'It starts with people looking at your business, not software.';
+  if(i===1) return m==='school'?'The graduate chooses. Implementation is one of four equal options.':'You choose. Implementation is only one of four equal options.';
+  if(i===2) return 'This example follows the implementation path.';
+  if(i===5) return m==='eng'?'Hard gate: nothing consequential executes without recorded approval.':'Nothing goes live without your yes.';
+  if(i===7) return m==='school'?'Each graduate owns a working system. Your school offers the support.':'The work happened behind the glass. You stayed in control.';
   return '';
 }
 function paintPanel(){
   const d=T[B.dataset.mode][stage];
-  $('#panel').innerHTML=`<span class="st ${d.s}">${{today:'Exists today',approved:'Approved principle',proposed:'Proposed',inactive:'Inactive',notbuilt:'Not built'}[d.s]}</span>
+  $('#panel').innerHTML=`<div class="st-row">${d.st.map(([c,l])=>`<span class="st ${c}">${l}</span>`).join('')}</div>
   <div class="panel-grid"><div><h4>${d.h}</h4><p style="margin:0;color:#D6D0C2">${d.w}</p></div>
   <dl style="margin:0"><dt>Who does it</dt><dd>${d.a}</dd><dt>Hands off</dt><dd>${d.o}</dd><dt>Human control</dt><dd>${d.c}</dd><dt>Runs in</dt><dd>${d.r}</dd></dl></div>
-  <p style="margin:12px 0 0;font-size:11.5px;color:#8E8879">Demonstration workflow. Illustrative, not a production feature.</p>`;
+  <p class="pnote">Demonstration workflow. Illustrative, not a production feature.</p>`;
 }
 function togglePlay(on){
   playing=on===undefined?!playing:on;const b=$('#playBtn');b.setAttribute('aria-pressed',playing);b.textContent=playing?'Pause':'Play';
   clearInterval(timer);if(playing){if(stage===STAGES.length-1)goStage(0);timer=setInterval(()=>{if(stage===STAGES.length-1){togglePlay(false);return}goStage(stage+1)},reduced?3200:2800)}
 }
+function setLayer(view){
+  const eng=view==='engine';
+  $('#engine').setAttribute('aria-hidden',!eng);$('#engine').inert=!eng;
+  $('#dash').setAttribute('aria-hidden',eng);$('#dash').inert=eng;
+}
+function setDashState(){
+  const done=visitedEnd;
+  $('#compMsg').textContent=done?'Your booking page is ready for review. Would you like to see it?':'Your business diagnostic is ready. One thing matters most: people can’t easily find your booking link.';
+  $('#reviewBtn').textContent=done?'Review page':'Read your report';
+  $('#taskRow').textContent=done?'Review your booking page':'Read your diagnostic';
+  $('#offerRow').textContent=done?'Private sessions · draft':'Private sessions · idea';
+}
 
 /* the signature transition */
 function toEngine(){
   if(B.dataset.view==='engine')return;
-  const go=()=>{B.classList.remove('lifting');B.dataset.view='engine';$('#engine').setAttribute('aria-hidden','false');$('#dash').setAttribute('aria-hidden','true');
+  const go=()=>{B.classList.remove('lifting');B.dataset.view='engine';setLayer('engine');
     const svg=$('#esvg');svg.classList.remove('reveal');void svg.getBBox();
-    $('#cap').textContent='Behind your dashboard, specialists prepared this — and waited for your approval.';
-    goStage(6);clearIntro();intro.push(setTimeout(()=>svg.classList.add('reveal'),reduced?0:700));
-    intro.push(setTimeout(()=>{goStage(0);$('#cap').textContent='One request. Watch where it goes.';if(!reduced)togglePlay(true)},reduced?600:3400));
+    clearIntro();goStage(0);
+    $('#cap').textContent='Behind your dashboard: people first, then specialist agents, with you deciding at every step.';
+    intro.push(setTimeout(()=>svg.classList.add('reveal'),reduced?0:500));
+    intro.push(setTimeout(()=>{$('#cap').textContent=captionFor(0);if(!reduced)togglePlay(true)},reduced?400:2600));
     $('#playBtn').focus({preventScroll:true});
   };
   if(reduced){go();return}
-  B.classList.add('lifting');setTimeout(go,750);
+  if(B.classList.contains('lifting'))return;B.classList.add('lifting');setTimeout(go,750);
 }
-function toDash(){clearIntro();togglePlay(false);B.dataset.view='dash';$('#engine').setAttribute('aria-hidden','true');$('#dash').setAttribute('aria-hidden','false');$('#howBtn').focus({preventScroll:true})}
+function toDash(){clearIntro();togglePlay(false);B.dataset.view='dash';setLayer('dash');setDashState();$('#howBtn').focus({preventScroll:true})}
 
 /* modes, scope, expand, reduced */
-function setMode(m){clearIntro();B.dataset.mode=m;$$('.seg:not(.scope) button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===m));
-  $('#modeQ').textContent=MODEQ[m];setExpanded(m==='eng');paintLabels();paintChecks();goStage(stage);}
-function setExpanded(v){B.dataset.expanded=v;$('#esvg').setAttribute('viewBox',v?'0 0 1110 430':'0 0 1110 250');$('#expBtn').setAttribute('aria-pressed',v);$('#expBtn').textContent=v?'Collapse engine':'Expand engine'}
+const MODES=['practitioner','school','eng'], SCOPES=['vision','today'];
+function setScope(v){if(!SCOPES.includes(v))return;B.dataset.scope=v;$$('.seg.scope button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.scope===v))}
+function setMode(m){if(!MODES.includes(m))return;clearIntro();B.dataset.mode=m;$$('.seg:not(.scope) button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===m));
+  $('#modeQ').textContent=MODEQ[m];setExpanded(m==='eng'||B.dataset.expanded==='true');paintLabels();paintChecks();goStage(stage);}
+function setExpanded(v){B.dataset.expanded=v;$('#esvg').setAttribute('viewBox',v?'0 0 1210 450':'0 0 1210 276');$('#expBtn').setAttribute('aria-pressed',v);$('#expBtn').textContent=v?'Collapse engine':'Expand engine'}
 $$('.seg:not(.scope) button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-$$('.seg.scope button').forEach(b=>b.onclick=()=>{B.dataset.scope=b.dataset.scope;$$('.seg.scope button').forEach(x=>x.setAttribute('aria-pressed',x===b))});
+$$('.seg.scope button').forEach(b=>b.onclick=()=>setScope(b.dataset.scope));
 $('#expBtn').onclick=()=>setExpanded(B.dataset.expanded!=='true');
-$('#rmBtn').onclick=()=>{reduced=!reduced;B.classList.toggle('rm',reduced);$('#rmBtn').setAttribute('aria-pressed',reduced)};
+$('#rmBtn').onclick=()=>{reduced=!reduced;B.classList.toggle('rm',reduced);$('#rmBtn').setAttribute('aria-pressed',reduced);if(reduced&&playing)togglePlay(false)};
 $('#rmBtn').setAttribute('aria-pressed',reduced);
 $('#howBtn').onclick=toEngine;$('#backBtn').onclick=toDash;
-$('#reviewBtn').onclick=()=>{$('#companion').animate?.([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:400});$('#companion small').textContent='Demonstration only — no real page to open'};
+$('#reviewBtn').onclick=()=>{if(!reduced)$('#companion').animate?.([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}],{duration:400});$('#companion small').textContent='Demonstration only — nothing real to open'};
 $('#playBtn').onclick=()=>{clearIntro();togglePlay()};$('#prevBtn').onclick=()=>goStage(stage-1,true);$('#nextBtn').onclick=()=>goStage(stage+1,true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&B.dataset.view==='engine')toDash()});
 
@@ -660,12 +718,16 @@ $('#scanBtn').onclick=()=>{
 };
 $('#ringBtn').onclick=()=>{const r=$('#rings');r.classList.remove('run');void r.offsetWidth;r.classList.add('run')};
 
-/* init */
-setExpanded(false);paintLabels();goStage(0);
+/* init. URL parameters are checked against whitelists before use */
+setExpanded(false);setLayer('dash');setDashState();paintLabels();goStage(0);
 const q=new URLSearchParams(location.search);
-if(q.get('mode'))setMode(q.get('mode'));
-if(q.get('scope')){B.dataset.scope=q.get('scope');$$('.seg.scope button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.scope===q.get('scope')))}
-if(q.get('view')==='engine'){reduced=true;B.classList.add('rm');toEngine();if(q.get('stage'))goStage(+q.get('stage'));if(q.get('rm')!=='1'){reduced=RMQ.matches;B.classList.toggle('rm',reduced)}}
+const qm=q.get('mode'), qs=q.get('scope'), qv=q.get('view'), qst=q.get('stage');
+if(MODES.includes(qm))setMode(qm);
+if(SCOPES.includes(qs))setScope(qs);
+if(qv==='engine'){const keep=reduced;reduced=true;B.classList.add('rm');toEngine();clearIntro();
+  if(qst!==null&&/^\d+$/.test(qst)&&+qst<STAGES.length)goStage(+qst);
+  reduced=keep;B.classList.toggle('rm',reduced);$('#rmBtn').setAttribute('aria-pressed',reduced)}
+RMQ.addEventListener?.('change',e=>{reduced=e.matches;B.classList.toggle('rm',reduced);$('#rmBtn').setAttribute('aria-pressed',reduced);if(reduced&&playing)togglePlay(false)});
 })();
 </script>
 </body>
