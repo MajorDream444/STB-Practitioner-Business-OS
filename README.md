@@ -43,3 +43,11 @@ assertion into evidence.
 ## Status
 
 Draft for approval. Nothing here has been sold or deployed.
+
+## Governed practitioner portal scaffold
+
+The proposed practitioner dashboard, approval and verification model, engineering boundaries, and Pat handoff are documented in:
+
+    docs/04-architecture/GOVERNED-PRACTITIONER-PORTAL-SCAFFOLD.md
+
+This remains future service-enablement infrastructure. It does not change the approved service-first, platform-later decision.
